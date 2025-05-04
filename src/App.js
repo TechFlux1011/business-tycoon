@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { HashRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import './tailwind.css';
 import './styles/App.css';
 import Clicker from './components/Clicker';
@@ -17,27 +18,32 @@ import Profile from './components/auth/Profile';
 import GameClock from './components/GameClock';
 import { useAuth } from './context/AuthContext';
 
-// Main App wrapper that provides authentication
-function AppWithAuth() {
-  return (
-    <AuthProvider>
-      <AppContent />
-    </AuthProvider>
-  );
-}
-
-function AppContent() {
+// Protected route component that redirects to login if not authenticated
+const ProtectedRoute = ({ children }) => {
   const { currentUser, authInitialized, loading } = useAuth();
-  const [activeTab, setActiveTab] = useState('clicker');
-  const [showProfile, setShowProfile] = useState(false);
-  const [error, setError] = useState(null);
 
-  // For debugging
-  useEffect(() => {
-    console.log("Auth state:", { currentUser, authInitialized, loading });
-  }, [currentUser, authInitialized, loading]);
+  if (loading || !authInitialized) {
+    return (
+      <div className="app-container flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mx-auto mb-4"></div>
+          <p className="text-lg">Loading... Please wait</p>
+        </div>
+      </div>
+    );
+  }
 
-  // Show loading spinner while auth state is being determined
+  if (!currentUser) {
+    return <Navigate to="/" />;
+  }
+
+  return children;
+};
+
+// Login/Register component
+function Auth() {
+  const { currentUser, authInitialized, loading } = useAuth();
+
   if (loading || !authInitialized) {
     return (
       <ThemeProvider>
@@ -50,22 +56,31 @@ function AppContent() {
       </ThemeProvider>
     );
   }
-  
-  // If no user is authenticated, show the auth container
-  if (!currentUser) {
-    return (
-      <ThemeProvider>
-        <div className="app-container flex items-center justify-center min-h-screen">
-          <div className="auth-page-container">
-            <h1 className="text-4xl font-bold text-center mb-6">Business Tycoon</h1>
-            <AuthContainer onAuthSuccess={() => {
-              console.log("Auth success called");
-            }} />
-          </div>
-        </div>
-      </ThemeProvider>
-    );
+
+  if (currentUser) {
+    return <Navigate to="/app" />;
   }
+
+  return (
+    <ThemeProvider>
+      <div className="app-container flex items-center justify-center min-h-screen">
+        <div className="auth-page-container">
+          <h1 className="text-4xl font-bold text-center mb-6">Business Tycoon</h1>
+          <AuthContainer onAuthSuccess={() => {
+            console.log("Auth success called");
+          }} />
+        </div>
+      </div>
+    </ThemeProvider>
+  );
+}
+
+// Main App Content
+function AppContent() {
+  const { currentUser } = useAuth();
+  const [activeTab, setActiveTab] = useState('clicker');
+  const [showProfile, setShowProfile] = useState(false);
+  const [error, setError] = useState(null);
   
   const renderTabContent = () => {
     try {
@@ -118,9 +133,6 @@ function AppContent() {
             <div className="app-content">
               <div className="header-container flex justify-between items-center p-2">
                 <div className="flex items-center">
-                  <div className="theme-toggle-container mr-3">
-                    <ThemeToggle />
-                  </div>
                   <div className="game-clock-container">
                     <GameClock />
                   </div>
@@ -155,6 +167,12 @@ function AppContent() {
                 renderTabContent()
               )}
             </div>
+            
+            {/* Theme toggle positioned above navbar */}
+            <div className="bottom-theme-toggle-container">
+              <ThemeToggle />
+            </div>
+            
             <nav className="app-navigation">
               <ul className="nav-list">
                 <li className={`nav-item ${activeTab === 'clicker' ? 'active' : ''}`}>
@@ -199,6 +217,28 @@ function AppContent() {
         </StockMarketProvider>
       </GameProvider>
     </ThemeProvider>
+  );
+}
+
+// Main App wrapper that provides authentication and routing
+function AppWithAuth() {
+  return (
+    <AuthProvider>
+      <Router>
+        <Routes>
+          <Route path="/" element={<Auth />} />
+          <Route 
+            path="/app" 
+            element={
+              <ProtectedRoute>
+                <AppContent />
+              </ProtectedRoute>
+            } 
+          />
+          <Route path="*" element={<Navigate to="/" />} />
+        </Routes>
+      </Router>
+    </AuthProvider>
   );
 }
 

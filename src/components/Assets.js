@@ -49,6 +49,11 @@ const Assets = () => {
   
   const toggleTab = (tab) => {
     setActiveTab(tab);
+    // Scroll to the top of the page when changing tabs
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
   };
 
   const buyAsset = (asset) => {
@@ -290,7 +295,7 @@ const Assets = () => {
     <div className="bg-white rounded-lg p-6 shadow-md">
       <div className="flex items-center justify-between mb-6 border-b border-gray-200 pb-4">
         <div className="flex items-center">
-          <span className="text-3xl mr-3">🏦</span>
+          <span className="text-5xl mr-4">🏦</span>
           <div>
             <h3 className="text-2xl font-bold text-gray-800">Banking</h3>
             <p className="text-gray-500 text-sm">Manage your personal finances</p>
@@ -684,7 +689,7 @@ const Assets = () => {
     <div className="bg-white rounded-lg p-4 shadow-sm">
       <div className="flex items-center justify-between mb-4 border-b pb-3">
         <div className="flex items-center">
-          <span className="text-3xl mr-2">🏠</span>
+          <span className="text-5xl mr-4">🏠</span>
           <h3 className="text-2xl font-bold text-gray-800">Find Your Next Home</h3>
         </div>
         <div className="flex items-center space-x-2 text-sm">
@@ -948,7 +953,7 @@ const Assets = () => {
 const renderTransportation = () => (
   <div className="bg-gradient-to-br from-amber-50 to-orange-100 rounded-lg p-6">
     <div className="flex items-center mb-4">
-      <span className="text-3xl mr-2">🚗</span>
+      <span className="text-5xl mr-4">🚗</span>
       <h3 className="text-2xl font-bold text-orange-800">Transportation Options</h3>
     </div>
     
@@ -1050,39 +1055,36 @@ const renderTransportation = () => (
 
 return (
   <div className="max-w-6xl mx-auto p-2 bg-white rounded-lg shadow-lg">
-    <div className="flex border-b border-gray-200 mb-6">
+    <div className="flex justify-around border-b border-gray-200 mb-6">
       <button 
-        className={`flex items-center py-3 px-6 font-medium text-lg transition-colors border-b-2 ${
+        className={`flex items-center justify-center py-3 px-4 font-medium text-lg transition-colors border-b-2 flex-1 ${
           activeTab === 'assets' 
             ? 'text-indigo-600 border-indigo-600' 
             : 'text-gray-500 border-transparent hover:text-indigo-600'
         }`}
         onClick={() => toggleTab('assets')}
       >
-        <span className="mr-2">🏦</span>
-        Banking
+        <span className="text-2xl">🏦</span>
       </button>
       <button 
-        className={`flex items-center py-3 px-6 font-medium text-lg transition-colors border-b-2 ${
+        className={`flex items-center justify-center py-3 px-4 font-medium text-lg transition-colors border-b-2 flex-1 ${
           activeTab === 'housing' 
             ? 'text-teal-600 border-teal-600' 
             : 'text-gray-500 border-transparent hover:text-teal-600'
         }`}
         onClick={() => toggleTab('housing')}
       >
-        <span className="mr-2">🏠</span>
-        Housing
+        <span className="text-2xl">🏠</span>
       </button>
       <button 
-        className={`flex items-center py-3 px-6 font-medium text-lg transition-colors border-b-2 ${
+        className={`flex items-center justify-center py-3 px-4 font-medium text-lg transition-colors border-b-2 flex-1 ${
           activeTab === 'transportation' 
             ? 'text-orange-600 border-orange-600' 
             : 'text-gray-500 border-transparent hover:text-orange-600'
         }`}
         onClick={() => toggleTab('transportation')}
       >
-        <span className="mr-2">🚗</span>
-        Transportation
+        <span className="text-2xl">🚗</span>
       </button>
     </div>
     

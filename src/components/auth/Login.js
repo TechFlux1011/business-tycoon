@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 
 export default function Login({ setShowRegister, onLoginSuccess }) {
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -28,6 +30,7 @@ export default function Login({ setShowRegister, onLoginSuccess }) {
       setLoading(true);
       await login(email, password);
       onLoginSuccess();
+      navigate('/app');
     } catch (error) {
       setError('Failed to log in: ' + error.message);
     } finally {
@@ -46,6 +49,7 @@ export default function Login({ setShowRegister, onLoginSuccess }) {
       setLoading(true);
       await signInWithGoogle();
       onLoginSuccess();
+      navigate('/app');
     } catch (error) {
       setError('Failed to sign in with Google: ' + error.message);
     } finally {
@@ -64,6 +68,7 @@ export default function Login({ setShowRegister, onLoginSuccess }) {
       setLoading(true);
       await signInWithApple();
       onLoginSuccess();
+      navigate('/app');
     } catch (error) {
       setError('Failed to sign in with Apple: ' + error.message);
     } finally {
@@ -84,6 +89,7 @@ export default function Login({ setShowRegister, onLoginSuccess }) {
       await signInAsGuest();
       console.log("Login component: Guest sign in completed");
       onLoginSuccess();
+      navigate('/app');
     } catch (error) {
       console.error("Guest sign-in error in Login component:", error);
       setError('Failed to sign in as guest: ' + error.message);

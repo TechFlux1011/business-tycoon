@@ -205,11 +205,18 @@ const stockMarketReducer = (state, action) => {
       // Update company ownership and add buy pressure to affect price
       const updatedCompanies = state.companies.map(company => {
         if (company.id === buyStockAction.stockId) {
-          const newOwnedAmount = company.owned + buyStockAction.shares;
+          // Ensure company has the needed properties initialized
+          const currentOwned = company.owned || 0;
+          const currentBuyPressure = company.buyPressure || 0;
+          const currentSellPressure = company.sellPressure || 0;
+          const totalShares = company.totalShares || 1000000;
+          const currentTransactions = company.transactions || [];
+          
+          const newOwnedAmount = currentOwned + buyStockAction.shares;
           
           // Calculate buy pressure based on volume relative to total shares
-          const relativeBuyVolume = buyStockAction.shares / company.totalShares;
-          const newBuyPressure = company.buyPressure + (relativeBuyVolume * 5);
+          const relativeBuyVolume = buyStockAction.shares / totalShares;
+          const newBuyPressure = currentBuyPressure + (relativeBuyVolume * 5);
           
           return {
             ...company,
@@ -222,14 +229,15 @@ const stockMarketReducer = (state, action) => {
                 total: buyStockAction.total, 
                 date: new Date().toISOString() 
               },
-              ...company.transactions
+              ...currentTransactions
             ],
             // If player owns more than 51% of shares, they control the company
-            companyOwned: newOwnedAmount > (company.totalShares * 0.51),
+            companyOwned: newOwnedAmount > (totalShares * 0.51),
             // Add buy pressure to affect future price calculations
             buyPressure: newBuyPressure,
             // Reduce sell pressure as stock is being bought
-            sellPressure: Math.max(0, company.sellPressure - (relativeBuyVolume * 2))
+            sellPressure: Math.max(0, currentSellPressure - (relativeBuyVolume * 2)),
+            totalShares: totalShares
           };
         }
         return company;
@@ -283,11 +291,18 @@ const stockMarketReducer = (state, action) => {
       // Update company ownership and add sell pressure
       const companiesAfterSell = state.companies.map(company => {
         if (company.id === sellDetails.stockId) {
-          const newOwnedAmount = company.owned - sellDetails.shares;
+          // Ensure company has the needed properties initialized
+          const currentOwned = company.owned || 0;
+          const currentBuyPressure = company.buyPressure || 0;
+          const currentSellPressure = company.sellPressure || 0;
+          const totalShares = company.totalShares || 1000000;
+          const currentTransactions = company.transactions || [];
+          
+          const newOwnedAmount = currentOwned - sellDetails.shares;
           
           // Calculate sell pressure based on volume relative to total shares
-          const relativeSellVolume = sellDetails.shares / company.totalShares;
-          const newSellPressure = company.sellPressure + (relativeSellVolume * 5);
+          const relativeSellVolume = sellDetails.shares / totalShares;
+          const newSellPressure = currentSellPressure + (relativeSellVolume * 5);
           
           return {
             ...company,
@@ -300,13 +315,14 @@ const stockMarketReducer = (state, action) => {
                 total: sellDetails.total, 
                 date: new Date().toISOString() 
               },
-              ...company.transactions
+              ...currentTransactions
             ],
-            companyOwned: newOwnedAmount > (company.totalShares * 0.51),
+            companyOwned: newOwnedAmount > (totalShares * 0.51),
             // Add sell pressure to affect future price calculations
             sellPressure: newSellPressure,
             // Reduce buy pressure as stock is being sold
-            buyPressure: Math.max(0, company.buyPressure - (relativeSellVolume * 2))
+            buyPressure: Math.max(0, currentBuyPressure - (relativeSellVolume * 2)),
+            totalShares: totalShares
           };
         }
         return company;
@@ -554,8 +570,37 @@ const StockMarketContext = createContext();
 
 // Provider component
 export const StockMarketProvider = ({ children }) => {
-  const [stockMarket, dispatch] = useReducer(stockMarketReducer, initializeStockData());
-  const { state: gameState, dispatch: gameDispatch } = useGame();
+  const { gameState, gameDispatch } = useGame();
+  const clockTickRef = useRef(0);
+  const [clockTick, setClockTick] = useState(0);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  
+  // Initialize stock data on load
+  const initialStockData = {
+    companies: initializeStockData().companies,
+    indices: initializeStockData().indices,
+    nowAverage: initializeStockData().nowAverage,
+    lastUpdate: new Date().toLocaleTimeString(),
+    news: [],
+    marketOpen: true,
+    marketDay: 'Monday',
+    marketHour: 9,
+    marketMinute: 30,
+    marketStatus: 'open',
+    marketTrend: 'neutral',
+    marketMood: 'neutral',
+    playerOwnedStocks: [],
+    transactionHistory: [],
+    watchlist: [],
+    // Price tracking for statistics
+    priceRecords: {
+      lastDay: [],
+      lastWeek: [],
+      lastMonth: []
+    }
+  };
+  
+  const [stockMarket, dispatch] = useReducer(stockMarketReducer, initialStockData);
   const [tickInterval, setTickInterval] = useState(null);
   const [timer, setTimer] = useState(null);
   // Add ref to track last price record time
@@ -563,7 +608,6 @@ export const StockMarketProvider = ({ children }) => {
   const priceUpdateInterval = useRef(null);
   // Add ref for tracking the internal clock
   const internalClockRef = useRef(null);
-  const [clockTick, setClockTick] = useState(0);
 
   // Modify the updateStockPrices function to enhance buy/sell pressure impact
   const updateStockPrices = () => {
@@ -1028,6 +1072,19 @@ export const StockMarketProvider = ({ children }) => {
     // Check if player has enough money
     if (gameState.money < total) {
       return { success: false, message: "Insufficient funds" };
+    }
+    
+    // Ensure company has the required properties initialized
+    if (company.owned === undefined) {
+      company.owned = 0;
+    }
+    
+    if (!company.transactions) {
+      company.transactions = [];
+    }
+    
+    if (!company.totalShares) {
+      company.totalShares = 1000000; // Default value if not defined
     }
     
     // Reduce player's money - use negative value with UPDATE_MONEY

@@ -131,6 +131,32 @@
   transition: var(--theme-transition);
 }
 
+/* Bottom theme toggle positioning */
+.bottom-theme-toggle-container {
+  position: absolute;
+  bottom: 4.5rem; /* Position above the navbar */
+  left: 1rem;
+  display: flex;
+  justify-content: flex-start;
+  background: transparent;
+  z-index: 50; /* High z-index to float above other content */
+  margin: 0;
+  padding: 0;
+}
+
+/* Mobile optimizations for bottom theme toggle */
+@media (max-width: 768px) {
+  .bottom-theme-toggle-container {
+    bottom: 4rem;
+    left: 0.5rem;
+  }
+  
+  .bottom-theme-toggle-container .theme-toggle-btn {
+    width: 2rem;
+    height: 2rem;
+  }
+}
+
 .nav-list {
   @apply flex justify-around items-center p-3 list-none;
 }
