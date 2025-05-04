@@ -577,10 +577,11 @@ function gameReducer(state, action) {
         let updatedJobPay = state.playerStatus.job.payPerClick;
         let updatedJobReadyForPromotion = state.playerStatus.job.readyForPromotion || false;
         
-        // GAIN SKILL POINTS ON CLICK - Get the job category to use as skill
+        // GAIN SKILL POINTS ON CLICK - This is now the ONLY way to gain skills
         const jobCategory = state.playerStatus.job.category;
         const currentSkillLevel = state.skills[jobCategory] || 0;
-        const skillGain = 0.01; // Small skill gain with each click
+        // Increased skill gain since this is now the only way to gain skills
+        const skillGain = 0.02; // Double the previous skill gain with each click
         const updatedSkills = {
           ...state.skills,
           [jobCategory]: currentSkillLevel + skillGain
@@ -665,7 +666,7 @@ function gameReducer(state, action) {
       
       if (state.playerStatus.job) {
         // Passive job experience gain (much slower than active clicking)
-        // Note: Removed passive skill gain - skills only gained through clicking now
+        // NOTE: No skill gain is happening here - skills only come from clicking
         const passiveJobXP = elapsed * 0.1; // 0.1 XP per second
         jobExperience += passiveJobXP;
         
@@ -1203,6 +1204,8 @@ function gameReducer(state, action) {
       const income = calcIncome(state);
       const offlineIncome = income * (cappedOfflineGameTime / 1000); // Convert to seconds
       
+      // Explicitly set no skill progression when offline
+      // Player needs to actively click to gain skills
       return {
         ...state,
         money: state.money + offlineIncome,
