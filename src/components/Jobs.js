@@ -447,28 +447,9 @@ const Jobs = () => {
     // Generate a random application time between 1 and 10 seconds
     const applicationTime = Math.floor(Math.random() * 9000) + 1000; // 1-10 seconds
     
-    // If it's a promotion, it has a high chance of success
-    let successChance = 0.9; // Default high chance for promotions
-    let isQualified = true;
-    let missingSkills = [];
-    
-    // Only check qualifications for non-promotion jobs
-    if (!job.isPromotion) {
-      // Check if player meets job requirements
-      const qualificationResult = getQualificationStatus(job);
-      isQualified = qualificationResult.qualified;
-      
-      // Apply success chance based on qualifications
-      // 90% chance if qualified, 10% chance if not qualified
-      successChance = isQualified ? 0.9 : 0.1;
-      
-      // Get missing skills for feedback
-      missingSkills = qualificationResult.missingSkills || [];
-    }
-    
-    // Roll for success
+    // Simple 90% chance of success (9/10 chance of being hired)
     const roll = Math.random();
-    const success = roll <= successChance;
+    const success = roll <= 0.9;
     
     // Process application result after the random delay
     setTimeout(() => {
@@ -510,16 +491,9 @@ const Jobs = () => {
         }
       } else {
         // Application failed
-        let failureMessage = `Sorry, your application for ${job.title} was rejected.`;
-        
-        // Add information about missing skills if applicable
-        if (!isQualified && missingSkills.length > 0) {
-          failureMessage += ` You need more experience in ${missingSkills.join(', ')}.`;
-        }
-        
         setApplicationResult({
           success: false,
-          message: failureMessage,
+          message: `Sorry, your application for ${job.title} was rejected. Better luck next time!`,
           jobId: job.id
         });
       }
@@ -756,21 +730,13 @@ const Jobs = () => {
           availableJobs.map((job, index) => {
             const isPending = pendingJob === job.id;
             const jobResult = applicationResult && applicationResult.jobId === job.id ? applicationResult : null;
-            const qualification = getQualificationStatus(job);
-            const qualificationClass = qualification.qualified ? 'qualified' : 'underqualified';
             
             return (
               <div 
                 key={job.id || index} 
-                className={`job-listing ${isPending ? 'pending' : ''} ${job.isPromotion ? 'promotion-job' : ''} ${qualificationClass}`}
+                className={`job-listing ${isPending ? 'pending' : ''} ${job.isPromotion ? 'promotion-job' : ''}`}
               >
                 {job.isPromotion && <div className="level-badge level-promotion">PROMOTION</div>}
-                {!job.isPromotion && (
-                  <div className={`qualification-badge ${qualificationClass}`}>
-                    {qualification.qualified ? 'Qualified' : `${Math.round(qualification.percentQualified)}% Qualified`}
-                  </div>
-                )}
-                
                 <div className="job-header">
                   <div className="job-icon">{getJobIcon(getJobCategory(job), job.category)}</div>
                   <div className="job-title">
@@ -799,31 +765,13 @@ const Jobs = () => {
                       <p>This promotion is available because you've reached the next milestone in your current career path.</p>
                     </div>
                   ) : (
-                    <>
-                      <div className="requirements-header">
-                        <h4>Required Skills</h4>
-                        <div className="success-chance">
-                          <span>Success Chance: </span>
-                          <span className={qualification.qualified ? 'high-chance' : 'low-chance'}>
-                            {qualification.qualified ? '90%' : '10%'}
-                          </span>
-                        </div>
-                      </div>
-                      <ul>
-                        {Object.entries(job.requirements || {}).map(([skill, level]) => (
-                          <li key={skill} className={isSkillSufficient(skill, level) ? 'met' : 'not-met'}>
-                            <span className="skill-name">{skill.charAt(0).toUpperCase() + skill.slice(1)}</span>
-                            <span className="skill-level">Level {Math.round(level)}</span>
-                            <span className="skill-status">{isSkillSufficient(skill, level) ? '✓' : '✗'}</span>
-                            {!isSkillSufficient(skill, level) && (
-                              <span className="skill-missing">
-                                (You have: {Math.round(state.skills[skill] || 0)})
-                              </span>
-                            )}
-                          </li>
-                        ))}
-                      </ul>
-                    </>
+                    <ul>
+                      {Object.entries(job.requirements || {}).map(([skill, level]) => (
+                        <li key={skill} className={isSkillSufficient(skill, level) ? 'met' : 'not-met'}>
+                          {skill}: {Math.round(level)} {isSkillSufficient(skill, level) ? '✓' : '✗'}
+                        </li>
+                      ))}
+                    </ul>
                   )}
                 </div>
                 
