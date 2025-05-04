@@ -1,0 +1,54 @@
+{
+  "name": "business-tycoon",
+  "version": "0.1.0",
+  "private": true,
+  "homepage": "https://ffluxx.github.io/buisnessTycoon-1/business-tycoon",
+  "dependencies": {
+    "@testing-library/dom": "^10.4.0",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^14.1.2",
+    "@testing-library/user-event": "^13.5.0",
+    "chart.js": "^4.4.8",
+    "firebase": "^10.6.0",
+    "react": "^18.2.0",
+    "react-chartjs-2": "^5.3.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.20.0",
+    "react-scripts": "5.0.1",
+    "web-vitals": "^2.1.4"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "cross-env DISABLE_ESLINT_PLUGIN=true CI=false react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.21",
+    "cross-env": "^7.0.3",
+    "gh-pages": "^6.3.0",
+    "postcss": "^8.5.3",
+    "tailwindcss": "^3.4.0"
+  },
+  "comment": "Using Alpha Vantage API (free tier) for stock market data. For production use, consider using a paid API with higher rate limits."
+}
