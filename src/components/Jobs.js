@@ -442,38 +442,39 @@ const Jobs = () => {
     }
     
     // Set this job as pending
-    setPendingJob(job);
+    setPendingJob(job.id);
     
-    // Determine if player qualifies for the job
-    const qualificationResult = getQualificationStatus(job);
-    const isQualified = qualificationResult.qualified;
+    // Generate a random application time between 1 and 10 seconds
+    const applicationTime = Math.floor(Math.random() * 9000) + 1000; // 1-10 seconds
     
-    // If it's a promotion opportunity, immediate success
-    const isPromotion = job.isPromotion;
+    // If it's a promotion, it has a high chance of success
+    let successChance = 0.9; // Default high chance for promotions
+    let isQualified = true;
+    let missingSkills = [];
     
-    // Calculate chance of application success
-    let successChance = isQualified ? 0.85 : qualificationResult.percentQualified / 100 * 0.5;
-    
-    // Apply modifiers based on job type
-    if (job.level && job.level >= 50) {
-      // High-level jobs are harder to get
-      successChance *= 0.85;
-    }
-    
-    // Promotions are guaranteed if you're ready
-    if (isPromotion && state.playerStatus.job?.readyForPromotion) {
-      successChance = 1.0;
+    // Only check qualifications for non-promotion jobs
+    if (!job.isPromotion) {
+      // Check if player meets job requirements
+      const qualificationResult = getQualificationStatus(job);
+      isQualified = qualificationResult.qualified;
+      
+      // Apply success chance based on qualifications
+      // 90% chance if qualified, 10% chance if not qualified
+      successChance = isQualified ? 0.9 : 0.1;
+      
+      // Get missing skills for feedback
+      missingSkills = qualificationResult.missingSkills || [];
     }
     
     // Roll for success
     const roll = Math.random();
     const success = roll <= successChance;
     
-    // Process application result after a delay
+    // Process application result after the random delay
     setTimeout(() => {
       if (success) {
         // Application successful!
-        if (isPromotion) {
+        if (job.isPromotion) {
           // Handle promotion differently
           dispatch({
             type: 'APPLY_FOR_PROMOTION',
@@ -483,7 +484,7 @@ const Jobs = () => {
           setApplicationResult({
             success: true,
             message: `Congratulations! You've been promoted to ${job.title}!`,
-            job: job
+            jobId: job.id
           });
         } else {
           // Set the new job
@@ -504,15 +505,22 @@ const Jobs = () => {
           setApplicationResult({
             success: true,
             message: `Congratulations! You got the ${job.title} job!`,
-            job: job
+            jobId: job.id
           });
         }
       } else {
         // Application failed
+        let failureMessage = `Sorry, your application for ${job.title} was rejected.`;
+        
+        // Add information about missing skills if applicable
+        if (!isQualified && missingSkills.length > 0) {
+          failureMessage += ` You need more experience in ${missingSkills.join(', ')}.`;
+        }
+        
         setApplicationResult({
           success: false,
-          message: `Sorry, your application for ${job.title} was rejected.${qualificationResult.missingSkills.length > 0 ? ' You need more experience in ' + qualificationResult.missingSkills.join(', ') + '.' : ''}`,
-          job: job
+          message: failureMessage,
+          jobId: job.id
         });
       }
       
@@ -525,7 +533,7 @@ const Jobs = () => {
       
       // Clear pending job
       setPendingJob(null);
-    }, 2000); // 2 second processing time
+    }, applicationTime);
   };
   
   return (
@@ -645,6 +653,9 @@ const Jobs = () => {
                   width: `${(state.playerStatus.jobExperience / jobExperienceNeededForLevel(state.playerStatus.job.level)) * 100}%` 
                 }}
               ></div>
+              <div className="level-progress-text text-shadow">
+                {Math.round(state.playerStatus.jobExperience)} / {jobExperienceNeededForLevel(state.playerStatus.job.level)} XP
+              </div>
             </div>
             <div className="level-experience-text">
               <span>XP: {Math.round(state.playerStatus.jobExperience)} / {jobExperienceNeededForLevel(state.playerStatus.job.level)}</span>
@@ -745,13 +756,21 @@ const Jobs = () => {
           availableJobs.map((job, index) => {
             const isPending = pendingJob === job.id;
             const jobResult = applicationResult && applicationResult.jobId === job.id ? applicationResult : null;
+            const qualification = getQualificationStatus(job);
+            const qualificationClass = qualification.qualified ? 'qualified' : 'underqualified';
             
             return (
               <div 
                 key={job.id || index} 
-                className={`job-listing ${isPending ? 'pending' : ''} ${job.isPromotion ? 'promotion-job' : ''}`}
+                className={`job-listing ${isPending ? 'pending' : ''} ${job.isPromotion ? 'promotion-job' : ''} ${qualificationClass}`}
               >
                 {job.isPromotion && <div className="level-badge level-promotion">PROMOTION</div>}
+                {!job.isPromotion && (
+                  <div className={`qualification-badge ${qualificationClass}`}>
+                    {qualification.qualified ? 'Qualified' : `${Math.round(qualification.percentQualified)}% Qualified`}
+                  </div>
+                )}
+                
                 <div className="job-header">
                   <div className="job-icon">{getJobIcon(getJobCategory(job), job.category)}</div>
                   <div className="job-title">
@@ -780,13 +799,31 @@ const Jobs = () => {
                       <p>This promotion is available because you've reached the next milestone in your current career path.</p>
                     </div>
                   ) : (
-                    <ul>
-                      {Object.entries(job.requirements || {}).map(([skill, level]) => (
-                        <li key={skill} className={isSkillSufficient(skill, level) ? 'met' : 'not-met'}>
-                          {skill}: {Math.round(level)} {isSkillSufficient(skill, level) ? '✓' : '✗'}
-                        </li>
-                      ))}
-                    </ul>
+                    <>
+                      <div className="requirements-header">
+                        <h4>Required Skills</h4>
+                        <div className="success-chance">
+                          <span>Success Chance: </span>
+                          <span className={qualification.qualified ? 'high-chance' : 'low-chance'}>
+                            {qualification.qualified ? '90%' : '10%'}
+                          </span>
+                        </div>
+                      </div>
+                      <ul>
+                        {Object.entries(job.requirements || {}).map(([skill, level]) => (
+                          <li key={skill} className={isSkillSufficient(skill, level) ? 'met' : 'not-met'}>
+                            <span className="skill-name">{skill.charAt(0).toUpperCase() + skill.slice(1)}</span>
+                            <span className="skill-level">Level {Math.round(level)}</span>
+                            <span className="skill-status">{isSkillSufficient(skill, level) ? '✓' : '✗'}</span>
+                            {!isSkillSufficient(skill, level) && (
+                              <span className="skill-missing">
+                                (You have: {Math.round(state.skills[skill] || 0)})
+                              </span>
+                            )}
+                          </li>
+                        ))}
+                      </ul>
+                    </>
                   )}
                 </div>
                 
@@ -804,15 +841,6 @@ const Jobs = () => {
                       <div className="application-pending">
                         <div className="loading-bar"></div>
                         <div className="pending-text">Application in progress...</div>
-                        <button 
-                          className="cancel-application-button" 
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            cancelApplication(job.id);
-                          }}
-                        >
-                          Cancel Application
-                        </button>
                       </div>
                     </>
                   ) : (

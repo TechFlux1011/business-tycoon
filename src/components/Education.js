@@ -353,58 +353,61 @@ const Education = () => {
             ></div>
           </div>
           <div className="flex justify-between flex-wrap mt-2">
-            <p className="text-sm text-gray-700 m-1">Skill: {formatSkillName(state.currentEducation.skill)}</p>
-            <p className="text-sm text-gray-700 m-1">Progress: {Math.round(state.educationProgress * 100)}%</p>
-            <p className="text-sm font-bold text-blue-700 m-1">{getTimeRemaining()}</p>
+            <p className="text-sm text-gray-700 m-1 dark:text-gray-200">Skill: {formatSkillName(state.currentEducation.skill)}</p>
+            <p className="text-sm text-gray-700 m-1 dark:text-gray-200">Progress: {Math.round(state.educationProgress * 100)}%</p>
+            <p className="text-sm font-bold text-blue-700 m-1 dark:text-blue-400">{getTimeRemaining()}</p>
           </div>
         </div>
       )}
       
-      <div className="bg-white rounded-lg p-5 mb-8 shadow-md">
-        <h3 className="text-lg font-medium text-gray-800 mb-4">Your Skills</h3>
+      <div className="bg-white dark:bg-gray-800 rounded-lg p-5 mb-8 shadow-md">
+        <h3 className="text-lg font-medium text-gray-800 dark:text-gray-200 mb-4">Your Skills</h3>
         <div className="flex flex-wrap gap-4 p-2">
           {Object.keys(state.skills).length > 0 ? (
             Object.entries(state.skills).map(([skill, level]) => (
-              <div key={skill} className="bg-blue-50 rounded-full py-2 px-4 text-sm flex items-center border-l-3 border-green-500">
-                <span className="font-bold text-gray-800 mr-2">{formatSkillName(skill)}:</span>
-                <span className="text-green-600 font-bold">Level {getSkillLevel(skill)}</span>
+              <div key={skill} className="bg-blue-50 dark:bg-blue-900 rounded-full py-2 px-4 text-sm flex items-center border-l-3 border-green-500">
+                <span className="font-bold text-gray-800 dark:text-gray-200 mr-2">{formatSkillName(skill)}:</span>
+                <span className="text-green-600 dark:text-green-400 font-bold">Level {getSkillLevel(skill)}</span>
               </div>
             ))
           ) : (
-            <p className="text-gray-500">You don't have any skills yet. Get some education!</p>
+            <p className="text-gray-500 dark:text-gray-400">You don't have any skills yet. Get some education!</p>
           )}
         </div>
       </div>
 
       {/* Job Training Section */}
-      <div className="mb-6 border-b border-gray-200">
-        <h3 className="text-xl font-semibold text-gray-800 mb-4">Job Training & Career Path</h3>
+      <div className="mb-6 border-b border-gray-200 dark:border-gray-700">
+        <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-4">Job Training & Career Path</h3>
       </div>
 
-      <div className="bg-white rounded-lg p-5 mb-8 shadow-md">
+      <div className="bg-white dark:bg-gray-800 rounded-lg p-5 mb-8 shadow-md">
         {!state.playerStatus.job ? (
-          <div className="text-center p-6 bg-gray-50 rounded-lg border border-gray-200">
-            <p className="text-gray-600">You don't have a job yet. Visit the Jobs tab to find one first!</p>
+          <div className="text-center p-6 bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600">
+            <p className="text-gray-600 dark:text-gray-300">You don't have a job yet. Visit the Jobs tab to find one first!</p>
           </div>
         ) : (
           <>
-            <div className="mb-6 p-4 bg-gray-50 rounded-lg">
-              <h4 className="font-semibold text-lg text-gray-800 mb-2">Current Position: {state.playerStatus.job.title}</h4>
-              <p className="text-gray-700 mb-1">Career: {formatSkillName(state.playerStatus.job.category)}</p>
-              <p className="text-gray-700 mb-1">Current Level: {getCurrentCareerLevel()}</p>
-              <p className="text-gray-700 mb-2">Tier: {getCurrentJobTier()}</p>
+            <div className="mb-6 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+              <h4 className="font-semibold text-lg text-gray-800 dark:text-gray-200 mb-2">Current Position: {state.playerStatus.job.title}</h4>
+              <p className="text-gray-700 dark:text-gray-300 mb-1">Career: {formatSkillName(state.playerStatus.job.category)}</p>
+              <p className="text-gray-700 dark:text-gray-300 mb-1">Current Level: {getCurrentCareerLevel()}</p>
+              <p className="text-gray-700 dark:text-gray-300 mb-2">Tier: {getCurrentJobTier()}</p>
               
               {/* Show promotion information */}
               {getNextPromotionLevel(getCurrentCareerLevel()) && (
                 <div className="mt-4">
-                  <p className="text-gray-700">Next promotion at level {getNextPromotionLevel(getCurrentCareerLevel())}: 
-                    <span className="font-medium text-blue-600 ml-1">{getJobTitleForLevel(state.playerStatus.job.category, getNextPromotionLevel(getCurrentCareerLevel()))}</span>
+                  <p className="text-gray-700 dark:text-gray-300">Next promotion at level {getNextPromotionLevel(getCurrentCareerLevel())}: 
+                    <span className="font-medium text-blue-600 dark:text-blue-400 ml-1">{getJobTitleForLevel(state.playerStatus.job.category, getNextPromotionLevel(getCurrentCareerLevel()))}</span>
                   </p>
-                  <div className="h-2 bg-gray-200 rounded-full mt-2 overflow-hidden">
+                  <div className="h-2 bg-gray-200 dark:bg-gray-600 rounded-full mt-2 overflow-hidden relative">
                     <div 
                       className="h-full bg-blue-500 rounded-full"
                       style={{ width: `${(Math.floor(getCurrentCareerLevel() - 1) % 10) * 10}%` }}
                     ></div>
+                    <div className="absolute w-full text-center text-xs text-gray-700 dark:text-gray-200 top-0 left-0 text-shadow">
+                      {Math.floor(getCurrentCareerLevel() - 1) % 10}/10 levels
+                    </div>
                   </div>
                 </div>
               )}

@@ -9,12 +9,12 @@
 
 .business-container h2 {
   margin-bottom: 25px;
-  color: #333;
+  color: var(--text-primary);
 }
 
 .business-container h3 {
   margin: 30px 0 20px;
-  color: #333;
+  color: var(--text-primary);
 }
 
 .owned-businesses {
@@ -30,7 +30,7 @@
 }
 
 .no-businesses p {
-  color: #555;
+  color: var(--text-secondary);
   font-style: italic;
 }
 
@@ -85,7 +85,7 @@
 }
 
 .business-description {
-  color: #666;
+  color: var(--text-secondary);
   margin-bottom: 15px;
   font-size: 14px;
 }

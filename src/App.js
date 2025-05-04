@@ -169,9 +169,9 @@ function AppContent() {
             </div>
             
             {/* Theme toggle positioned above navbar */}
-            <div className="bottom-theme-toggle-container">
+            {/* <div className="bottom-theme-toggle-container">
               <ThemeToggle />
-            </div>
+            </div> */}
             
             <nav className="app-navigation">
               <ul className="nav-list">
