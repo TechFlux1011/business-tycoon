@@ -344,17 +344,17 @@ const Education = () => {
       <h2 className="text-2xl font-semibold text-gray-800 mb-6 pb-2 border-b border-gray-200">Education & Skills</h2>
       
       {state.currentEducation && (
-        <div className="bg-blue-50 rounded-lg p-4 mb-6 shadow border border-blue-200">
-          <h3 className="text-center text-blue-700 font-medium mb-3">Currently Learning: {state.currentEducation.name}</h3>
-          <div className="h-3 bg-gray-200 rounded-full overflow-hidden border border-gray-300">
+        <div className="mb-8 p-4 bg-white dark:bg-gray-800 rounded-lg shadow-md">
+          <h3 className="text-lg font-medium text-blue-600 dark:text-blue-400 mb-3">Currently Learning: {state.currentEducation.name}</h3>
+          <div className="h-4 w-full bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
             <div 
               className="h-full bg-green-500 rounded-full animate-progress-bar"
               style={{ width: `${state.educationProgress * 100}%` }}
             ></div>
           </div>
           <div className="flex justify-between flex-wrap mt-2">
-            <p className="text-sm text-gray-700 m-1 dark:text-gray-200">Skill: {formatSkillName(state.currentEducation.skill)}</p>
-            <p className="text-sm text-gray-700 m-1 dark:text-gray-200">Progress: {Math.round(state.educationProgress * 100)}%</p>
+            <p className="text-sm text-green-800 font-medium m-1 dark:text-green-400">Skill: {formatSkillName(state.currentEducation.skill)}</p>
+            <p className="text-sm text-green-800 font-medium m-1 dark:text-green-400">Progress: {Math.round(state.educationProgress * 100)}%</p>
             <p className="text-sm font-bold text-blue-700 m-1 dark:text-blue-400">{getTimeRemaining()}</p>
           </div>
         </div>
@@ -367,7 +367,7 @@ const Education = () => {
             Object.entries(state.skills).map(([skill, level]) => (
               <div key={skill} className="bg-blue-50 dark:bg-blue-900 rounded-full py-2 px-4 text-sm flex items-center border-l-3 border-green-500">
                 <span className="font-bold text-gray-800 dark:text-gray-200 mr-2">{formatSkillName(skill)}:</span>
-                <span className="text-green-600 dark:text-green-400 font-bold">Level {getSkillLevel(skill)}</span>
+                <span className="text-green-800 dark:text-green-400 font-bold">Level {getSkillLevel(skill)}</span>
               </div>
             ))
           ) : (
@@ -405,7 +405,7 @@ const Education = () => {
                       className="h-full bg-blue-500 rounded-full"
                       style={{ width: `${(Math.floor(getCurrentCareerLevel() - 1) % 10) * 10}%` }}
                     ></div>
-                    <div className="absolute w-full text-center text-xs text-gray-700 dark:text-gray-200 top-0 left-0 text-shadow">
+                    <div className="absolute w-full text-center text-xs text-green-800 dark:text-green-400 font-medium top-0 left-0 text-shadow">
                       {Math.floor(getCurrentCareerLevel() - 1) % 10}/10 levels
                     </div>
                   </div>
