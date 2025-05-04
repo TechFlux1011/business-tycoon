@@ -1,17 +1,17 @@
 {
   "files": {
-    "main.css": "/business-tycoon/static/css/main.c70b2db3.css",
+    "main.css": "/business-tycoon/static/css/main.0154ac02.css",
     "main.js": "/business-tycoon/static/js/main.7588ec2b.js",
     "static/js/428.54e20c01.chunk.js": "/business-tycoon/static/js/428.54e20c01.chunk.js",
     "static/js/453.d5f383ac.chunk.js": "/business-tycoon/static/js/453.d5f383ac.chunk.js",
     "index.html": "/business-tycoon/index.html",
-    "main.c70b2db3.css.map": "/business-tycoon/static/css/main.c70b2db3.css.map",
+    "main.0154ac02.css.map": "/business-tycoon/static/css/main.0154ac02.css.map",
     "main.7588ec2b.js.map": "/business-tycoon/static/js/main.7588ec2b.js.map",
     "428.54e20c01.chunk.js.map": "/business-tycoon/static/js/428.54e20c01.chunk.js.map",
     "453.d5f383ac.chunk.js.map": "/business-tycoon/static/js/453.d5f383ac.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.c70b2db3.css",
+    "static/css/main.0154ac02.css",
     "static/js/main.7588ec2b.js"
   ]
 }
