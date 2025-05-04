@@ -1,17 +1,17 @@
 {
   "files": {
-    "main.css": "/business-tycoon/static/css/main.2439c397.css",
-    "main.js": "/business-tycoon/static/js/main.2cf273ad.js",
+    "main.css": "/business-tycoon/static/css/main.f915517b.css",
+    "main.js": "/business-tycoon/static/js/main.249183ce.js",
     "static/js/428.54e20c01.chunk.js": "/business-tycoon/static/js/428.54e20c01.chunk.js",
     "static/js/453.d5f383ac.chunk.js": "/business-tycoon/static/js/453.d5f383ac.chunk.js",
     "index.html": "/business-tycoon/index.html",
-    "main.2439c397.css.map": "/business-tycoon/static/css/main.2439c397.css.map",
-    "main.2cf273ad.js.map": "/business-tycoon/static/js/main.2cf273ad.js.map",
+    "main.f915517b.css.map": "/business-tycoon/static/css/main.f915517b.css.map",
+    "main.249183ce.js.map": "/business-tycoon/static/js/main.249183ce.js.map",
     "428.54e20c01.chunk.js.map": "/business-tycoon/static/js/428.54e20c01.chunk.js.map",
     "453.d5f383ac.chunk.js.map": "/business-tycoon/static/js/453.d5f383ac.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.2439c397.css",
-    "static/js/main.2cf273ad.js"
+    "static/css/main.f915517b.css",
+    "static/js/main.249183ce.js"
   ]
 }
