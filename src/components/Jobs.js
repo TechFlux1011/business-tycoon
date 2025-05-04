@@ -468,18 +468,25 @@ const Jobs = () => {
             jobId: job.id
           });
         } else {
-          // Set the new job
+          // Set the new job in the player state
+          const newJob = {
+            id: job.id,
+            title: job.title,
+            hourlyPay: job.hourlyPay,
+            basePayPerClick: job.payPerClick,
+            payPerClick: job.payPerClick,
+            category: job.category,
+            level: job.level || 1,
+            image: job.image,
+            baseTitle: job.title,
+            readyForPromotion: false
+          };
+          
+          // Update the player's job status in the game state
           dispatch({
-            type: 'SET_JOB',
+            type: 'UPDATE_PLAYER_JOB',
             payload: {
-              id: job.id,
-              title: job.title,
-              hourlyPay: job.hourlyPay,
-              payPerClick: job.payPerClick,
-              category: job.category,
-              level: job.level || 1,
-              image: job.image,
-              baseTitle: job.title
+              job: newJob
             }
           });
           
@@ -493,7 +500,7 @@ const Jobs = () => {
         // Application failed
         setApplicationResult({
           success: false,
-          message: `Sorry, your application for ${job.title} was rejected. Better luck next time!`,
+          message: `Sorry, your application for ${job.title} was rejected. Try again later.`,
           jobId: job.id
         });
       }
@@ -785,12 +792,10 @@ const Jobs = () => {
                 {/* Action Buttons */}
                 <div className="job-action-buttons">
                   {isPending ? (
-                    <>
-                      <div className="application-pending">
-                        <div className="loading-bar"></div>
-                        <div className="pending-text">Application in progress...</div>
-                      </div>
-                    </>
+                    <div className="application-pending">
+                      <div className="loading-bar"></div>
+                      <div className="pending-text">Application in progress...</div>
+                    </div>
                   ) : (
                     <button 
                       className="apply-job-button" 
@@ -798,7 +803,7 @@ const Jobs = () => {
                         e.stopPropagation();
                         selectJob(job);
                       }}
-                      disabled={pendingJob !== null}
+                      disabled={pendingJob !== null || (applicationTimers[job.id] && applicationTimers[job.id] > Date.now())}
                     >
                       {job.isPromotion ? 'Apply for Promotion' : 'Apply for Job'}
                     </button>

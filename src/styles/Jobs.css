@@ -458,7 +458,7 @@
 }
 
 .application-pending {
-  margin-bottom: 10px;
+  margin-bottom: 15px;
   width: 100%;
   position: relative;
 }
@@ -466,7 +466,7 @@
 .loading-bar {
   height: 10px;
   width: 100%;
-  background: linear-gradient(90deg, #ffd700, #ff9800, #ffd700);
+  background: linear-gradient(90deg, var(--primary-500), var(--primary-700), var(--primary-500));
   background-size: 200% 100%;
   animation: loading-bar-animation 1.5s infinite linear;
   border-radius: 5px;
@@ -476,7 +476,7 @@
 
 .pending-text {
   text-align: center;
-  color: #666;
+  color: var(--text-secondary);
   font-size: 14px;
   margin-bottom: 15px;
   font-weight: bold;

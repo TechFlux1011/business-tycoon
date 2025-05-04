@@ -1135,6 +1135,20 @@ function gameReducer(state, action) {
       };
     }
     
+    case 'UPDATE_PLAYER_JOB': {
+      const { job } = action.payload;
+      
+      // Update player job status with the new job
+      return {
+        ...state,
+        playerStatus: {
+          ...state.playerStatus,
+          job: job,
+          jobExperience: 0 // Reset job experience for new job
+        }
+      };
+    }
+    
     case 'SELECT_TRANSPORTATION': {
       return {
         ...state,
