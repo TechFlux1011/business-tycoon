@@ -46,7 +46,7 @@ const Education = () => {
     
     if (remaining <= 0) return "Completing...";
     
-    // Convert to seconds
+    // Convert to seconds (real time)
     const seconds = Math.ceil(remaining / 1000);
     
     return `${seconds} seconds remaining`;

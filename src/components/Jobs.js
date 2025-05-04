@@ -444,14 +444,14 @@ const Jobs = () => {
     // Set this job as pending
     setPendingJob(job.id);
     
-    // Generate a random application time between 1 and 10 seconds
-    const applicationTime = Math.floor(Math.random() * 9000) + 1000; // 1-10 seconds
+    // Generate a random application time between 1 and 10 seconds (real time)
+    const applicationTime = Math.floor(Math.random() * 9000) + 1000; // 1-10 seconds in milliseconds
     
     // Simple 90% chance of success (9/10 chance of being hired)
     const roll = Math.random();
     const success = roll <= 0.9;
     
-    // Process application result after the random delay
+    // Process application result after the random delay (real seconds, not game time)
     setTimeout(() => {
       if (success) {
         // Application successful!
@@ -505,8 +505,8 @@ const Jobs = () => {
         });
       }
       
-      // Set a cooldown timer for this specific job (30 seconds)
-      const cooldownTime = Date.now() + 30000; // 30 seconds cooldown
+      // Set a cooldown timer for this specific job (30 seconds real time)
+      const cooldownTime = Date.now() + 30000; // 30 seconds cooldown in milliseconds
       setApplicationTimers(prev => ({
         ...prev,
         [job.id]: cooldownTime

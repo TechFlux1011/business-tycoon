@@ -32,7 +32,7 @@ const initialState = {
   },
   // Game clock settings
   timeSettings: {
-    gameTimeRatio: 60, // 1 real second = 60 game seconds (1 minute real = 60 minutes game)
+    gameTimeRatio: 60, // 1 real second = 60 game seconds (1 minute game time)
     lastRealTime: Date.now(), // Last real-world timestamp
     gameTime: Date.now(), // Current game time
     totalOfflineTime: 0, // Total time spent offline in milliseconds
@@ -577,6 +577,15 @@ function gameReducer(state, action) {
         let updatedJobPay = state.playerStatus.job.payPerClick;
         let updatedJobReadyForPromotion = state.playerStatus.job.readyForPromotion || false;
         
+        // GAIN SKILL POINTS ON CLICK - Get the job category to use as skill
+        const jobCategory = state.playerStatus.job.category;
+        const currentSkillLevel = state.skills[jobCategory] || 0;
+        const skillGain = 0.01; // Small skill gain with each click
+        const updatedSkills = {
+          ...state.skills,
+          [jobCategory]: currentSkillLevel + skillGain
+        };
+        
         // If we gained enough experience for a level-up
         if (newJobExperience >= expNeeded) {
           // Increase job level
@@ -598,6 +607,7 @@ function gameReducer(state, action) {
           return {
             ...state,
             money: state.money + clickValue,
+            skills: updatedSkills, // Add updated skills
             playerStatus: {
               ...state.playerStatus,
               jobExperience: newJobExperience,
@@ -616,6 +626,7 @@ function gameReducer(state, action) {
         return {
           ...state,
           money: state.money + clickValue,
+          skills: updatedSkills, // Add updated skills
           playerStatus: {
             ...state.playerStatus,
             jobExperience: newJobExperience,
@@ -654,6 +665,7 @@ function gameReducer(state, action) {
       
       if (state.playerStatus.job) {
         // Passive job experience gain (much slower than active clicking)
+        // Note: Removed passive skill gain - skills only gained through clicking now
         const passiveJobXP = elapsed * 0.1; // 0.1 XP per second
         jobExperience += passiveJobXP;
         
@@ -972,7 +984,8 @@ function gameReducer(state, action) {
         durationMultiplier = 1 + (state.skills[education.skill] * 0.2);
       }
       
-      // Base duration is 60 seconds (60000 ms)
+      // Base duration is 60 seconds of real time (60000 ms)
+      // This is NOT affected by game time ratio - education always uses real seconds
       const educationDuration = 60000 * durationMultiplier;
       
       // Set multiplier based on background (if any)
@@ -989,7 +1002,7 @@ function gameReducer(state, action) {
         currentEducation: {
           ...education,
           startTime: Date.now(),
-          duration: educationDuration, // Now directly in milliseconds
+          duration: educationDuration, // Real-time milliseconds, not affected by game time ratio
           multiplier: skillMultiplier,
         },
         educationProgress: 0,
@@ -1001,6 +1014,7 @@ function gameReducer(state, action) {
         return state;
       }
       
+      // Calculate progress using real time (not affected by game time ratio)
       const now = Date.now();
       const elapsed = now - state.currentEducation.startTime;
       const progress = Math.min(1, elapsed / state.currentEducation.duration);
@@ -1073,18 +1087,14 @@ function gameReducer(state, action) {
       
       if (!choice || !choice.outcome) return state;
       
-      // Apply the outcome
+      // Get the outcome but don't add skill points anymore
       const outcome = choice.outcome;
-      const skillName = outcome.skill;
-      const skillGain = outcome.gain;
       
-      // Add the skill gain
+      // Just give player some money or experience instead of skill points
       return {
         ...state,
-        skills: {
-          ...state.skills,
-          [skillName]: (state.skills[skillName] || 0) + skillGain
-        },
+        money: state.money + 5.0, // Give a small money bonus instead of skill points
+        experience: state.experience + 3, // Give a small XP bonus instead
         workEvents: {
           ...state.workEvents,
           pendingEvent: null,
@@ -1361,11 +1371,11 @@ export function GameProvider({ children }) {
   
   // Initialize player background on first render if not already set
   useEffect(() => {
-    if (!isLoading && (!state.playerStatus.background || Object.keys(state.skills).length === 0)) {
-      console.log("Initializing player background and skills");
+    if (!isLoading && state.playerStatus && !state.playerStatus.background && Object.keys(state.skills).length === 0) {
+      console.log("Initializing player background and skills - new player detected");
       dispatch({ type: 'INIT_PLAYER' });
     }
-  }, [isLoading, state.playerStatus.background, state.skills]);
+  }, [isLoading, state.playerStatus?.background]);
   
   // If there's an error, show it in the UI
   if (error) {
