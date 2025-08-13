@@ -556,10 +556,12 @@ const workEvents = {
 function gameReducer(state, action) {
   switch (action.type) {
     case 'CLICK': {
-      // Calculate click value (1 penny or 1 minute of work)
+      // Calculate click value (1 penny if no job, otherwise 1 minute of the job's hourly rate)
       const clickValue = state.playerStatus.job 
-        ? state.playerStatus.job.payPerClick / 60 // One minute of hourly pay
-        : 0.01; // One penny if no job
+        ? (state.playerStatus.job.hourlyPay
+            ? state.playerStatus.job.hourlyPay / 60
+            : state.playerStatus.job.payPerClick)
+        : 0.01;
       
       // Add click XP (consistent amount regardless of job)
       const clickXP = 1 + (state.level * 0.1); // Base XP + 10% per level
@@ -656,50 +658,14 @@ function gameReducer(state, action) {
       // Apply income for elapsed time (only passive income from assets/business)
       const newMoney = state.money + income * elapsed;
       
-      // Earn experience based on income
-      const incomeXP = income * elapsed * 0.1; // 1 XP per $10 earned
+      // Player leveling removed: do not award player XP based on income
+      const incomeXP = 0;
       
-      // Add passive job experience based on time if employed
-      let jobExperience = state.playerStatus.jobExperience || 0;
-      let currentJobLevel = state.playerStatus.job?.level || 1;
-      let updatedJob = state.playerStatus.job;
+      // Remove passive job experience gain. Job experience should ONLY increase on click.
+      const updatedJob = state.playerStatus.job;
       
-      if (state.playerStatus.job) {
-        // Passive job experience gain (much slower than active clicking)
-        // NOTE: No skill gain is happening here - skills only come from clicking
-        const passiveJobXP = elapsed * 0.1; // 0.1 XP per second
-        jobExperience += passiveJobXP;
-        
-        // Check for job level up
-        const experienceNeeded = jobExperienceNeededForLevel(currentJobLevel);
-        if (jobExperience >= experienceNeeded) {
-          jobExperience -= experienceNeeded;
-          currentJobLevel += 1;
-          
-          // Update job title and pay based on new level
-          updatedJob = {
-            ...state.playerStatus.job,
-            level: currentJobLevel,
-            title: state.playerStatus.job.baseTitle || state.playerStatus.job.title,
-            payPerClick: calculatePayForLevel(state.playerStatus.job.basePayPerClick, currentJobLevel)
-          };
-          
-          // Update job title based on level and category
-          if (state.playerStatus.job.category) {
-            updatedJob.title = getJobTitleForLevel(state.playerStatus.job.category, currentJobLevel);
-          }
-        }
-      }
-      
-      let newExperience = state.experience + incomeXP;
+      let newExperience = state.experience;
       let newLevel = state.level;
-      
-      // Check for level up (cap at 100)
-      const MAX_LEVEL = 100;
-      if (newExperience >= experienceNeededForLevel(state.level) && state.level < MAX_LEVEL) {
-        newExperience -= experienceNeededForLevel(state.level);
-        newLevel++;
-      }
       
       // Update game time based on real time passed
       const currentGameTime = getCurrentGameTime(state);
@@ -712,8 +678,7 @@ function gameReducer(state, action) {
         level: newLevel,
         playerStatus: {
           ...state.playerStatus,
-          job: updatedJob,
-          jobExperience: jobExperience
+          job: updatedJob
         },
         timeSettings: {
           ...state.timeSettings,
@@ -724,20 +689,8 @@ function gameReducer(state, action) {
     }
     
     case 'ASCEND': {
-      // Each ascension adds 1 year to age and gives 5% permanent income boost
-      const newAge = state.playerStatus.age + 1;
-      const newAscensionBonus = state.playerStatus.ascensionBonus + 5;
-      const newAscensionCount = state.playerStatus.ascensionCount + 1;
-      
-      return {
-        ...state,
-        playerStatus: {
-          ...state.playerStatus,
-          age: newAge,
-          ascensionBonus: newAscensionBonus,
-          ascensionCount: newAscensionCount,
-        }
-      };
+      // Player ascension removed; keep state unchanged
+      return state;
     }
     
     case 'INIT_PLAYER': {

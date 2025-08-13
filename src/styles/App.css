@@ -9,6 +9,7 @@
 .app-content {
   @apply flex-1 overflow-auto;
   position: relative;
+  padding-bottom: 4.5rem; /* prevent bottom nav overlap on mobile */
 }
 
 /* Theme toggle styles */
@@ -134,6 +135,11 @@
   background-color: var(--bg-secondary);
   box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
   transition: var(--theme-transition);
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 20;
 }
 
 /* Bottom theme toggle positioning */
@@ -813,6 +819,7 @@
 .header-container {
   width: 100%;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  padding: 0.25rem 0.5rem !important; /* tighter header */
 }
 
 .profile-button {

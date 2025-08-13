@@ -106,17 +106,7 @@ const Clicker = () => {
     }
   }, [isHolding, dispatch, getClickInterval, canAutoClick, gameState]);
   
-  // Check for level-based ascensions
-  useEffect(() => {
-    if (!gameState) return;
-    
-    // Ascension milestone levels
-    const milestones = [10, 25, 50, 100];
-    
-    if (milestones.includes(gameState.level)) {
-      setShowAscension(true);
-    }
-  }, [gameState]);
+  // Player ascensions removed
   
   // Add effect to ensure cleanup on unmount
   useEffect(() => {
@@ -189,13 +179,7 @@ const Clicker = () => {
   // Use gameState instead of state throughout the component
   const state = gameState;
   
-  // Calculate progress percentage to next level
-  const experienceNeededForLevel = (level) => {
-    return Math.floor(100 * Math.pow(1.5, level - 1));
-  };
-  
-  const nextLevelXP = experienceNeededForLevel(state.level);
-  const progressPercentage = (state.experience / nextLevelXP) * 100;
+  // Player level removed
 
   // Max level for the game
   const MAX_LEVEL = 100;
@@ -395,12 +379,6 @@ const Clicker = () => {
       <div className="player-info-section">
         <div className="player-name-level">
           <h2>{state.playerStatus.name || "Player"}</h2>
-          <div className="player-level">
-            <span className="level-badge level-beginner">Level {state.level}</span>
-            <div className="xp-bar">
-              <div className="xp-progress" style={{ width: `${progressPercentage}%` }}></div>
-            </div>
-          </div>
         </div>
         
         <div className="job-info-panel">
@@ -569,20 +547,7 @@ const Clicker = () => {
         </div>
       </div>
       
-      {/* Ascension prompt */}
-      {showAscension && (
-        <div className="ascension-prompt">
-          <h3>Ascension Available!</h3>
-          <p>You've reached level {state.level}, which is an ascension milestone!</p>
-          <p>Ascending will add 1 year to your age and grant a permanent 5% income bonus.</p>
-          <div className="ascension-buttons">
-            <button className="ascend-button" onClick={handleAscension}>Ascend</button>
-            <button className="decline-button" onClick={dismissAscension}>Continue Playing</button>
-          </div>
-        </div>
-      )}
-      
-      {state.level >= MAX_LEVEL && <Regeneration />}
+      {/* Player ascension removed */}
       
       {skillGainIndicator && (
         <div 

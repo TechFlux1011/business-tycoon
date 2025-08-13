@@ -10,8 +10,8 @@
   background: linear-gradient(135deg, var(--primary-100) 0%, var(--primary-200) 100%);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-md);
-  padding: var(--space-md);
-  margin-bottom: var(--space-lg);
+  padding: 12px; /* more compact */
+  margin-bottom: 12px; /* tighter spacing */
   position: relative;
   overflow: hidden;
 }
@@ -21,8 +21,8 @@
   position: absolute;
   top: 0;
   right: 0;
-  width: 150px;
-  height: 150px;
+  width: 9.375rem;
+  height: 9.375rem;
   background: radial-gradient(circle, rgba(187, 222, 251, 0.4) 0%, rgba(227, 242, 253, 0) 70%);
   z-index: 0;
 }
@@ -35,9 +35,33 @@
 
 .player-name-level h2 {
   color: var(--primary-900);
-  margin: 0 0 var(--space-sm) 0;
-  font-size: var(--text-2xl);
+  margin: 0 0 8px 0;
+  font-size: var(--text-xl); /* smaller heading */
   font-weight: var(--weight-semibold);
+}
+
+/* Compact level pill next to Player name */
+.player-info-section .level-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 20px;
+  padding: 0 8px;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
+  border-radius: 9999px;
+  color: #0f172a; /* slate-900 */
+  background: linear-gradient(180deg, #e2f3ff 0%, #cdeaff 100%);
+  border: 1px solid rgba(2, 132, 199, 0.25); /* sky-600 tint */
+  box-shadow: 0 1px 2px rgba(2, 132, 199, 0.12);
+  white-space: nowrap;
+}
+
+.player-info-section .level-badge.level-beginner {
+  background: linear-gradient(180deg, #d1fae5 0%, #a7f3d0 100%); /* green-100 -> green-200 */
+  border-color: rgba(5, 150, 105, 0.25); /* emerald-600 tint */
+  box-shadow: 0 1px 2px rgba(5, 150, 105, 0.12);
 }
 
 .player-level {
@@ -53,7 +77,7 @@
 }
 
 .xp-bar {
-  height: 10px;
+  height: 8px; /* thinner bar */
   background-color: rgba(255, 255, 255, 0.9);
   border-radius: var(--radius-sm);
   overflow: hidden;
@@ -70,8 +94,8 @@
 .job-info-panel {
   background-color: rgba(255, 255, 255, 0.7);
   border-radius: var(--radius-md);
-  padding: var(--space-sm);
-  margin: var(--space-sm) 0;
+  padding: 8px; /* compact */
+  margin: 8px 0; /* compact */
   position: relative;
   z-index: 1;
 }
@@ -97,24 +121,24 @@
 
 .job-info-panel .job-title-container {
   flex: 1;
-  padding-right: 10px;
+  padding-right: 0.625rem;
 }
 
 .job-title {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  font-size: var(--text-lg);
+  font-size: var(--text-md); /* smaller */
   font-weight: var(--weight-semibold);
   color: var(--primary-900);
-  margin-bottom: var(--space-xs);
+  margin-bottom: 6px;
 }
 
 .job-level-indicator {
   font-size: var(--text-sm);
   background-color: var(--primary-600);
   color: var(--text-light);
-  padding: 5px var(--space-sm);
+  padding: 0.3125rem var(--space-sm);
   border-radius: var(--radius-xl);
   margin-left: var(--space-sm);
   font-weight: var(--weight-medium);
@@ -136,8 +160,8 @@
 .job-pay {
   color: var(--success-800);
   font-weight: var(--weight-semibold);
-  font-size: var(--text-md);
-  margin-bottom: var(--space-sm);
+  font-size: 14px; /* smaller */
+  margin-bottom: 8px;
 }
 
 .no-job {
@@ -151,7 +175,8 @@
 .business-stats {
   display: flex;
   justify-content: space-between;
-  margin: var(--space-sm) 0;
+  margin: 6px 0; /* more compact */
+  gap: 6px;
   position: relative;
   z-index: 1;
 }
@@ -159,10 +184,10 @@
 .stat-box {
   background-color: var(--bg-secondary);
   border-radius: var(--radius-md);
-  padding: var(--space-sm);
+  padding: 6px; /* smaller */
   box-shadow: var(--shadow-sm);
   flex: 1;
-  margin: 0 var(--space-xs);
+  margin: 0 4px;
   text-align: center;
   transition: transform var(--transition-fast) ease, box-shadow var(--transition-fast) ease;
 }
@@ -182,14 +207,14 @@
 
 .stat-label {
   color: #616161;
-  font-size: 14px;
+  font-size: 11px; /* smaller */
   font-weight: 500;
-  margin-bottom: 5px;
+  margin-bottom: 2px;
 }
 
 .stat-value {
   color: #1976d2;
-  font-size: 22px;
+  font-size: 16px; /* smaller */
   font-weight: 600;
 }
 
@@ -197,17 +222,17 @@
 .money-display {
   background-color: #fff;
   border-radius: 8px;
-  padding: 15px;
+  padding: 10px; /* smaller */
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   text-align: center;
-  margin-top: 15px;
+  margin-top: 10px;
   position: relative;
   z-index: 1;
 }
 
 .money-value {
   color: #2e7d32;
-  font-size: 28px;
+  font-size: 22px; /* smaller */
   font-weight: 700;
 }
 
@@ -319,7 +344,7 @@
   flex: 1;
   background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
   border-radius: 12px;
-  height: 200px;
+  height: 13.75rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -348,21 +373,21 @@
 }
 
 .tap-icon {
-  font-size: 48px;
-  margin-bottom: 15px;
+  font-size: 3rem;
+  margin-bottom: 0.9375rem;
 }
 
 .tap-text {
   color: #2e7d32;
   font-weight: 600;
-  font-size: 18px;
-  margin-bottom: 10px;
+  font-size: 1.125rem;
+  margin-bottom: 0.625rem;
 }
 
 .tap-value {
   color: #1b5e20;
   font-weight: 700;
-  font-size: 24px;
+  font-size: 1.5rem;
 }
 
 .tap-pad.no-auto-click {
@@ -379,22 +404,22 @@
 
 .auto-click-info span {
   background-color: rgba(255, 255, 255, 0.9);
-  padding: 5px 12px;
-  border-radius: 20px;
-  font-size: 14px;
+  padding: 0.3125rem 0.75rem;
+  border-radius: 1.25rem;
+  font-size: 0.875rem;
   color: #757575;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
 /* Job Level Progress */
 .job-level-progress {
-  margin-top: 15px;
+  margin-top: 0.25rem;
 }
 
 .level-display {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 8px;
+  margin-bottom: 0.25rem;
   font-weight: 500;
 }
 
@@ -427,7 +452,7 @@
 .level-experience-text {
   display: flex;
   justify-content: space-between;
-  margin-top: 8px;
+  margin-top: 0.25rem;
   font-size: 13px;
   color: #1565c0;
 }
@@ -472,7 +497,7 @@
   pointer-events: none;
   color: #3bd86d;
   font-weight: bold;
-  text-shadow: 0 0 2px rgba(0,0,0,0.5);
+  text-shadow: 0 0 0.125rem rgba(0,0,0,0.5);
   transition: all 0.75s ease-out;
   z-index: 9999;
 }
@@ -483,7 +508,7 @@
   pointer-events: none;
   color: #f5d742;
   font-weight: bold;
-  text-shadow: 0 0 2px rgba(0,0,0,0.5);
+  text-shadow: 0 0 0.125rem rgba(0,0,0,0.5);
   transition: all 0.75s ease-out;
   z-index: 9999;
 }
@@ -562,15 +587,15 @@
 /* Promotion Notification */
 .promotion-notification {
   position: fixed;
-  bottom: 20px;
-  right: 20px;
+  bottom: 1.25rem;
+  right: 1.25rem;
   background: linear-gradient(135deg, #fff8e1 0%, #ffecb3 100%);
-  border-radius: 10px;
-  padding: 15px;
+  border-radius: 0.625rem;
+  padding: 0.9375rem;
   display: flex;
   align-items: center;
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
-  width: 320px;
+  width: 20rem;
   animation: slide-in-right 0.5s;
   z-index: 999;
   cursor: pointer;
@@ -583,8 +608,8 @@
 }
 
 .promotion-notification-icon {
-  font-size: 28px;
-  margin-right: 15px;
+  font-size: 1.75rem;
+  margin-right: 0.9375rem;
   animation: bounce 1s infinite alternate;
 }
 
@@ -593,15 +618,15 @@
 }
 
 .promotion-notification-content h4 {
-  margin: 0 0 5px 0;
+  margin: 0 0 0.3125rem 0;
   color: #e65100;
-  font-size: 16px;
+  font-size: 1rem;
 }
 
 .promotion-notification-content p {
   margin: 0;
   color: #5f4339;
-  font-size: 14px;
+  font-size: 0.875rem;
   line-height: 1.4;
 }
 
@@ -609,9 +634,9 @@
   background: none;
   border: none;
   color: #bf360c;
-  font-size: 18px;
+  font-size: 1.125rem;
   cursor: pointer;
-  padding: 5px;
+  padding: 0.3125rem;
 }
 
 @keyframes slide-in-right {
@@ -641,8 +666,8 @@
   }
 
   .player-info-section {
-    padding: 15px;
-    margin-bottom: 15px;
+    padding: 10px; /* tighter */
+    margin-bottom: 10px;
   }
 
   .player-name-level {
@@ -657,33 +682,33 @@
   .business-stats {
     flex-direction: row;
     flex-wrap: wrap;
-    gap: 5px;
-    margin: 10px 0;
+    gap: 4px;
+    margin: 8px 0;
   }
   
   .stat-box {
-    flex: 0 1 calc(33.33% - 10px);
+    flex: 0 1 calc(33.33% - 8px);
     margin: 0;
-    padding: 8px;
+    padding: 6px;
     min-width: 0;
   }
   
   .stat-label {
-    font-size: 12px;
+    font-size: 10px;
     margin-bottom: 2px;
   }
   
   .stat-value {
-    font-size: 16px;
+    font-size: 14px;
   }
   
   .job-info-panel {
-    padding: 10px;
-    margin: 10px 0;
+    padding: 6px; /* tighter */
+    margin: 8px 0;
   }
 
   .job-title {
-    font-size: 16px;
+    font-size: 14px;
   }
 
   .job-level-indicator {
@@ -692,22 +717,22 @@
   }
 
   .job-pay {
-    font-size: 14px;
+    font-size: 12px;
   }
 
   .money-display {
-    margin-top: 10px;
-    padding: 10px;
+    margin-top: 8px;
+    padding: 8px;
   }
   
   .money-value {
-    font-size: 22px;
+    font-size: 18px;
   }
   
   .tap-pad-section {
     flex-direction: column;
     margin-top: 15px;
-    height: 50vh;
+    height: 48vh; /* ensure pad fits viewport */
   }
   
   .boost-icons-column {
@@ -741,28 +766,28 @@
   
   .tap-pad {
     flex: 1;
-    height: calc(50vh - 65px);
+    height: calc(48vh - 55px);
   }
 
   .tap-icon {
-    font-size: 36px;
+    font-size: 32px;
     margin-bottom: 10px;
   }
 
   .tap-text {
-    font-size: 16px;
+    font-size: 14px;
     margin-bottom: 5px;
   }
 
   .tap-value {
-    font-size: 20px;
+    font-size: 18px;
   }
 
   .level-progress-bar, .xp-bar {
-    height: 8px;
+    height: 6px; /* thinner */
   }
 
   .level-experience-text, .current-job-level, .next-job-level {
-    font-size: 12px;
+    font-size: 11px;
   }
 } 

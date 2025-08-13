@@ -131,21 +131,21 @@ function AppContent() {
               </div>
             )}
             <div className="app-content">
-              <div className="header-container flex justify-between items-center p-2">
+              <div className="header-container flex justify-between items-center py-1 px-2">
                 <div className="flex items-center">
-                  <div className="game-clock-container">
+                  <div className="game-clock-container scale-90">
                     <GameClock />
                   </div>
                 </div>
                 <div className="user-info-container">
                   <button 
                     onClick={() => setShowProfile(true)}
-                    className="profile-button flex items-center"
+                    className="profile-button flex items-center text-sm"
                   >
-                    <span className="user-display-name mr-2">
+                    <span className="user-display-name mr-2 truncate max-w-[140px]">
                       {currentUser?.displayName || currentUser?.email || 'Guest'}
                     </span>
-                    <span className="user-avatar bg-blue-500 text-white rounded-full w-8 h-8 flex items-center justify-center">
+                    <span className="user-avatar bg-blue-500 text-white rounded-full w-7 h-7 flex items-center justify-center text-xs">
                       {(currentUser?.displayName?.[0] || currentUser?.email?.[0] || 'G').toUpperCase()}
                     </span>
                   </button>

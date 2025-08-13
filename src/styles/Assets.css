@@ -1,10 +1,10 @@
 .assets-container {
-  max-width: 1200px;
+  max-width: 75rem;
   margin: 0 auto;
-  padding: 20px;
+  padding: 1.25rem;
   background-color: #f9f9f9;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 0.5rem;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.1);
 }
 
 .assets-tabs {
@@ -15,8 +15,8 @@
 }
 
 .assets-tabs button {
-  padding: 10px 20px;
-  font-size: 16px;
+  padding: 0.625rem 1.25rem;
+  font-size: 1rem;
   background: none;
   border: none;
   cursor: pointer;
@@ -44,13 +44,13 @@
 }
 
 .assets-content {
-  padding: 20px 0;
+  padding: 1.25rem 0;
 }
 
 .assets-section h3,
 .housing-section h3,
 .transportation-section h3 {
-  margin-bottom: 15px;
+  margin-bottom: 0.9375rem;
   color: #333;
 }
 
@@ -64,8 +64,8 @@
 .owned-assets-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 15px;
-  margin-bottom: 30px;
+  gap: 0.9375rem;
+  margin-bottom: 1.875rem;
 }
 
 /* Additional styles for better grid layout */
@@ -75,19 +75,25 @@
 .owned-assets-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 15px;
-  margin-bottom: 30px;
+  gap: 0.9375rem;
+  margin-bottom: 1.875rem;
 }
 
 @media (max-width: 768px) {
+  .transportation-grid,
+  .housing-grid,
+  .assets-grid,
+  .owned-assets-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
   .asset-card, 
   .housing-card, 
   .transportation-card,
   .owned-asset-card,
   .current-housing-card,
   .current-transportation-card {
-    padding: 10px;
-    font-size: 14px;
+    padding: 0.625rem;
+    font-size: 0.875rem;
     display: flex;
     flex-direction: column;
   }
@@ -95,37 +101,43 @@
   .asset-description,
   .housing-description,
   .transportation-description {
-    font-size: 13px;
+    font-size: 0.8125rem;
     -webkit-line-clamp: 1;
   }
   
   .asset-details {
-    font-size: 13px;
+    font-size: 0.8125rem;
   }
   
   .buy-button {
-    padding: 8px;
-    font-size: 13px;
+    padding: 0.5rem;
+    font-size: 0.8125rem;
     margin-top: auto;
   }
   
   .asset-icon, 
   .housing-icon, 
   .transportation-icon {
-    font-size: 22px;
+    font-size: 1.375rem;
   }
   
   .transportation-grid,
   .housing-grid,
   .assets-grid,
   .owned-assets-grid {
-    gap: 10px;
+    gap: 0.625rem;
   }
 }
 
 @media (max-width: 480px) {
+  .transportation-grid,
+  .housing-grid,
+  .assets-grid,
+  .owned-assets-grid {
+    grid-template-columns: 1fr;
+  }
   .assets-container {
-    padding: 10px;
+    padding: 0.625rem;
   }
   
   .asset-card, 
@@ -135,7 +147,7 @@
   .current-housing-card,
   .current-transportation-card {
     aspect-ratio: 2/3;
-    padding: 8px;
+    padding: 0.5rem;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -147,16 +159,16 @@
   .owned-asset-card h4,
   .current-housing-card h4,
   .current-transportation-card h4 {
-    font-size: 12px;
+    font-size: 0.75rem;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    margin: 3px 0;
+    margin: 0.1875rem 0;
   }
   
   .asset-boost {
-    font-size: 11px;
-    margin: 2px 0 4px 0;
+    font-size: 0.6875rem;
+    margin: 0.125rem 0 0.25rem 0;
   }
   
   .asset-description,
@@ -166,8 +178,8 @@
   }
   
   .asset-details p {
-    font-size: 11px;
-    margin: 3px 0;
+    font-size: 0.6875rem;
+    margin: 0.1875rem 0;
   }
   
   .asset-details .roi {
@@ -177,24 +189,24 @@
   .asset-icon, 
   .housing-icon, 
   .transportation-icon {
-    font-size: 20px;
-    margin-bottom: 3px;
+    font-size: 1.25rem;
+    margin-bottom: 0.1875rem;
   }
   
   .buy-button {
-    padding: 5px;
-    font-size: 11px;
+    padding: 0.3125rem;
+    font-size: 0.6875rem;
     margin-top: auto;
   }
   
   .read-more-btn {
-    font-size: 10px;
-    margin: 0 0 5px 0;
+    font-size: 0.625rem;
+    margin: 0 0 0.3125rem 0;
   }
   
   .speed-multiplier {
-    font-size: 11px;
-    margin: 2px 0 4px 0;
+    font-size: 0.6875rem;
+    margin: 0.125rem 0 0.25rem 0;
   }
   
   .highlight {
@@ -220,7 +232,7 @@
   .housing-grid,
   .assets-grid,
   .owned-assets-grid {
-    gap: 8px;
+    gap: 0.5rem;
   }
 }
 
@@ -231,9 +243,9 @@
 .current-housing-card,
 .current-transportation-card {
   background-color: white;
-  border-radius: 8px;
-  padding: 15px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 0.5rem;
+  padding: 0.9375rem;
+  box-shadow: 0 0.125rem 0.375rem rgba(0, 0, 0, 0.1);
   transition: transform 0.3s, box-shadow 0.3s;
   position: relative;
   overflow: hidden;
@@ -249,7 +261,7 @@
 .current-housing-card:hover,
 .current-transportation-card:hover {
   transform: translateY(-3px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.15);
 }
 
 .asset-card:active, 
@@ -259,20 +271,20 @@
 .current-housing-card:active,
 .current-transportation-card:active {
   transform: translateY(0);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.1);
 }
 
 .owned-asset-card,
 .current-housing-card,
 .current-transportation-card {
-  border-left: 4px solid #4CAF50;
+  border-left: 0.25rem solid #4CAF50;
 }
 
 .asset-icon, 
 .housing-icon, 
 .transportation-icon {
-  font-size: 24px;
-  margin-bottom: 10px;
+  font-size: 1.5rem;
+  margin-bottom: 0.625rem;
   color: #4CAF50;
 }
 
@@ -282,16 +294,16 @@
 .owned-asset-card h4,
 .current-housing-card h4,
 .current-transportation-card h4 {
-  margin: 5px 0;
+  margin: 0.3125rem 0;
   color: #333;
 }
 
 .asset-description,
 .housing-description,
 .transportation-description {
-  font-size: 14px;
+  font-size: 0.875rem;
   color: #666;
-  margin-bottom: 10px;
+  margin-bottom: 0.625rem;
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
@@ -300,8 +312,8 @@
 }
 
 .asset-details {
-  font-size: 14px;
-  margin-bottom: 10px;
+  font-size: 0.875rem;
+  margin-bottom: 0.625rem;
 }
 
 .asset-details p {
@@ -311,8 +323,8 @@
 .asset-boost {
   color: #4CAF50;
   font-weight: bold;
-  font-size: 14px;
-  margin: 2px 0 8px 0;
+  font-size: 0.875rem;
+  margin: 0.125rem 0 0.5rem 0;
 }
 
 .info-hint {
@@ -325,11 +337,11 @@
 
 .buy-button {
   width: 100%;
-  padding: 8px;
+  padding: 0.5rem;
   background-color: #4CAF50;
   color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: 0.25rem;
   cursor: pointer;
   transition: background-color 0.3s;
   margin-top: auto;
@@ -353,14 +365,14 @@
 }
 
 .owned {
-  border-left: 4px solid #4CAF50;
+  border-left: 0.25rem solid #4CAF50;
   background-color: #f0fff0;
 }
 
 .owned-assets h4,
 .current-housing h4,
 .current-transportation h4 {
-  margin-bottom: 10px;
+  margin-bottom: 0.625rem;
   color: #333;
 }
 

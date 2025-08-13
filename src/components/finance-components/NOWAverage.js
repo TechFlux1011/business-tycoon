@@ -16,9 +16,9 @@ const NOWAverage = () => {
   const renderNOWAverage = () => {
     if (!stockMarket.nowAverage) return null;
 
-    const nowValue = stockMarket.nowAverage.value;
-    const previousClose = stockMarket.nowAverage.previousClose;
-    const percentChange = ((nowValue - previousClose) / previousClose) * 100;
+    const nowValue = stockMarket.nowAverage.currentValue;
+    const previousClose = stockMarket.nowAverage.previousValue || stockMarket.nowAverage.currentValue;
+    const percentChange = previousClose ? ((nowValue - previousClose) / previousClose) * 100 : 0;
     const isPositive = percentChange >= 0;
 
     return (
@@ -49,8 +49,8 @@ const NOWAverage = () => {
       return <div className="flex items-center justify-center h-full">Loading chart data...</div>;
     }
     
-    // Use the entire price history for the day
-    const valueHistory = stockMarket.nowAverage.valueHistory;
+    // Use the entire value history for the day
+    const valueHistory = stockMarket.nowAverage.valueHistory.filter(Number.isFinite);
     
     // Determine if the market is up or down for the day
     const marketUp = valueHistory[valueHistory.length - 1] >= valueHistory[0];

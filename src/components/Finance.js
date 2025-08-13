@@ -215,14 +215,8 @@ const Finance = () => {
     return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
   }, [lastGlobalRefresh]);
   
-  // Early return with loading message if gameState is undefined
-  if (!gameState) {
-    return <div className="loading-container">Loading game data...</div>;
-  }
-  
-  // Use gameState instead of state throughout the component
-  const state = gameState;
-  const { money } = state;
+  // Use money safely even if gameState isn't ready yet
+  const money = gameState?.money ?? 0;
   
   // Sort function
   const handleSort = (key) => {
@@ -972,7 +966,7 @@ const Finance = () => {
           className="modal-content max-w-3xl w-full mx-4 max-h-[90vh] overflow-y-auto"
         >
           {/* Stock info header */}
-          <div className="bg-gray-800 text-white p-4 flex items-center justify-between ${showRefreshAnimation ? 'data-refreshed' : ''}">
+          <div className={`bg-gray-800 text-white p-4 flex items-center justify-between ${showRefreshAnimation ? 'data-refreshed' : ''}`}>
             <div className="flex items-center">
               <span className="text-2xl mr-3">{company.logo}</span>
               <div>
@@ -1416,7 +1410,7 @@ const Finance = () => {
     return () => clearInterval(countdownTimer);
   }, [showTradeModal]);
 
-  // Add a useEffect to refresh all stock prices every 30 seconds
+  // Add a useEffect to refresh all stock prices periodically (every 30 seconds)
   useEffect(() => {
     // Clear any existing timer
     if (globalRefreshTimer.current) {
@@ -1437,7 +1431,7 @@ const Finance = () => {
       // Reset refreshing state after a delay
       setTimeout(() => setIsGlobalRefreshing(false), 800);
       
-    }, 5000); // 5 seconds instead of 30000
+    }, 30000); // 30 seconds
     
     // Clean up interval when component unmounts
     return () => {

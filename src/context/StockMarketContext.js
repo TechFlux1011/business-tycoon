@@ -436,19 +436,21 @@ const stockMarketReducer = (state, action) => {
       // Generate new prices using similar logic as the market tick
       const marketSentiment = state.marketMood;
       const refreshedCompanies = state.companies.map(company => {
-        // Calculate a random price change based on company volatility and market conditions
-        const volatility = company.volatility || 0.02;
-        const marketFactor = marketSentiment === 'bullish' ? 0.3 : 
-                            marketSentiment === 'bearish' ? -0.3 : 0;
-        
-        // Random price fluctuation based on volatility
-        const randomFactor = (Math.random() - 0.5) * volatility * 2;
+      // Calculate a random price change based on company volatility and market conditions
+      const volatility = company.volatility || 0.02;
+      const marketFactor = marketSentiment === 'bullish' ? 0.2 : 
+                          marketSentiment === 'bearish' ? -0.2 : 0;
+      
+      // Random price fluctuation based on volatility (slightly reduced)
+      const randomFactor = (Math.random() - 0.5) * volatility * 1.2;
         
         // Company-specific trend factor (supply/demand)
-        const supplyDemandFactor = (company.buyPressure - company.sellPressure) * 0.01;
+      const supplyDemandFactor = (company.buyPressure - company.sellPressure) * 0.008;
         
         // Combined factors for price change
-        const changePercent = randomFactor + marketFactor * volatility + supplyDemandFactor;
+      let changePercent = randomFactor + marketFactor * volatility + supplyDemandFactor;
+      // Clamp extreme moves for single refresh
+      changePercent = Math.max(Math.min(changePercent, 0.002), -0.002);
         
         // Calculate new price
         const newPrice = Math.max(0.01, company.currentPrice * (1 + changePercent));
@@ -607,13 +609,13 @@ export const StockMarketProvider = ({ children }) => {
 
     // Update each company's stock price with enhanced buy/sell pressure impact
     const updatedCompanies = stockMarket.companies.map(company => {
-      // Start with the sector impact for this company
-      let priceChange = sectorImpacts[company.sector] || 0;
+      // Start with the sector impact for this company (reduced)
+      let priceChange = (sectorImpacts[company.sector] || 0) * 0.8;
       
       // Add company-specific volatility - weighted by company beta if available
       const companyBeta = company.beta || 1.0;
       const companySpecificFactor = (Math.random() * 2 - 1) * company.volatility * companyBeta;
-      priceChange += companySpecificFactor * 0.4; // Reduce weight of random movements
+      priceChange += companySpecificFactor * 0.25; // Reduced weight of random movements
       
       // Calculate price trend based on historical movement (smoother transitions)
       let priceTrend = company.priceTrend || 0;
@@ -623,11 +625,11 @@ export const StockMarketProvider = ({ children }) => {
       priceTrend = Math.max(-0.5, Math.min(0.5, priceTrend));
       
       // Enhanced buy/sell pressure impact (increase the influence by 50%)
-      const supplyDemandFactor = (company.buyPressure - company.sellPressure) * 0.15; // Increased from 0.1
+      const supplyDemandFactor = (company.buyPressure - company.sellPressure) * 0.08; // More realistic impact
       priceChange += supplyDemandFactor;
       
       // Apply more weight to the established trend for continuity
-      priceChange = (priceChange * 0.5) + (priceTrend * 0.3) + (supplyDemandFactor * 0.2); // More influence from supply/demand
+      priceChange = (priceChange * 0.6) + (priceTrend * 0.25) + (supplyDemandFactor * 0.15);
 
       // Apply company-specific random news (1% chance per company)
       if (Math.random() < 0.01 && company.news && company.news.length > 0) {
@@ -741,7 +743,8 @@ export const StockMarketProvider = ({ children }) => {
       const newSellPressure = company.sellPressure * 0.995;
       
       // Limit extreme price changes (circuit breaker)
-      priceChange = Math.max(Math.min(priceChange, 0.09), -0.09);
+      // Clamp per-second move to a realistic range (~0.2% per second)
+      priceChange = Math.max(Math.min(priceChange, 0.002), -0.002);
       
       // Calculate new price with all factors
       const newPrice = company.currentPrice * (1 + priceChange);
@@ -752,7 +755,7 @@ export const StockMarketProvider = ({ children }) => {
       else if (priceChange < -0.0025) trending = 'down';
       
       // Update volume based on price change magnitude (higher price change = higher volume)
-      const volumeChange = Math.abs(priceChange) * company.totalShares * 0.05;
+      const volumeChange = Math.abs(priceChange) * company.totalShares * 0.02;
       // Add some randomness to volume
       const volumeRandomFactor = 0.75 + (Math.random() * 0.5);
       const newVolume = Math.floor(company.volume + volumeChange * volumeRandomFactor);
@@ -942,8 +945,7 @@ export const StockMarketProvider = ({ children }) => {
       recordPriceChanges();
     }
     
-    // Advance market time
-    advanceMarketTime();
+    // Note: market time advancement is handled by the internal clock (every 5 seconds)
   };
   
   // Function to advance market time

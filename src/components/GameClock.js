@@ -22,12 +22,12 @@ const GameClock = () => {
     : `1 real second = ${gameState.timeSettings.gameTimeRatio} game seconds`;
   
   return (
-    <div className="game-clock bg-gradient-to-r from-slate-800 to-slate-700 text-white px-3 py-2 rounded-lg shadow-lg">
+    <div className="game-clock bg-gradient-to-r from-slate-800 to-slate-700 text-white px-2 py-1 rounded-md shadow-md">
       <div className="flex items-center justify-between">
-        <div className="flex flex-col">
-          <div className="text-sm opacity-80">{formattedDate}</div>
-          <div className="text-xl font-bold">{formattedTime}</div>
-          <div className="text-xs opacity-60 mt-1">{timeRatioText}</div>
+        <div className="flex flex-col leading-tight">
+          <div className="text-[0.625rem] opacity-80">{formattedDate}</div>
+          <div className="text-base font-bold">{formattedTime}</div>
+          <div className="text-[0.625rem] opacity-60 mt-0.5">{timeRatioText}</div>
         </div>
       </div>
     </div>
