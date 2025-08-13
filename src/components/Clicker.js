@@ -12,6 +12,7 @@ const Clicker = () => {
   const [showAscension, setShowAscension] = useState(false);
   const [isHolding, setIsHolding] = useState(false);
   const [activeTooltip, setActiveTooltip] = useState(null);
+  const [businessStatsExpanded, setBusinessStatsExpanded] = useState(false);
   const intervalRef = useRef(null);
   const boostsContainerRef = useRef(null);
   const [skillGainIndicator, setSkillGainIndicator] = useState(null);
@@ -377,10 +378,6 @@ const Clicker = () => {
     <div className="clicker-container">
       {/* Top section with player info */}
       <div className="player-info-section">
-        <div className="player-name-level">
-          <h2>{state.playerStatus.name || "Player"}</h2>
-        </div>
-        
         <div className="job-info-panel">
           {state.playerStatus.job ? (
             <>
@@ -437,17 +434,26 @@ const Clicker = () => {
         </div>
         
         <div className="business-stats">
-          <div className="stat-box">
-            <div className="stat-label">Businesses</div>
-            <div className="stat-value">{countBusinesses()}</div>
-          </div>
-          <div className="stat-box">
-            <div className="stat-label">Passive Income</div>
-            <div className="stat-value">${(income * 60).toFixed(2)}/min</div>
-          </div>
-          <div className="stat-box">
-            <div className="stat-label">Ascension</div>
-            <div className="stat-value">{state.generation}</div>
+          <button 
+            className={`business-stats-toggle ${businessStatsExpanded ? 'expanded' : ''}`}
+            onClick={() => setBusinessStatsExpanded(!businessStatsExpanded)}
+          >
+            <span>Business Overview</span>
+            <span className="toggle-icon">▼</span>
+          </button>
+          <div className={`business-stats-content ${businessStatsExpanded ? 'expanded' : ''}`}>
+            <div className="stat-box">
+              <div className="stat-label">Businesses</div>
+              <div className="stat-value">{countBusinesses()}</div>
+            </div>
+            <div className="stat-box">
+              <div className="stat-label">Passive Income</div>
+              <div className="stat-value">${(income * 60).toFixed(2)}/min</div>
+            </div>
+            <div className="stat-box">
+              <div className="stat-label">Ascension</div>
+              <div className="stat-value">{state.generation}</div>
+            </div>
           </div>
         </div>
         
@@ -458,72 +464,8 @@ const Clicker = () => {
       
       {/* Bottom tap pad section */}
       <div className="tap-pad-section">
-        {/* Boost icons on the left */}
-        <div className="boost-icons-column" ref={boostsContainerRef}>
-          {state.playerStatus.transportation && (
-            <div 
-              className={`boost-icon-wrapper ${activeTooltip === 'transportation' ? 'tooltip-active' : ''}`}
-              onClick={() => handleTooltipToggle('transportation')}
-            >
-              <div className="boost-icon transportation-boost">
-                <span>{state.playerStatus.transportation.image}</span>
-                <span className="boost-text">{getClicksPerSecond(state.playerStatus)}x</span>
-              </div>
-              <div className="boost-tooltip">
-                <h4>Transportation Boost</h4>
-                <p>Your {state.playerStatus.transportation.name} allows you to work {getClicksPerSecond(state.playerStatus)} clicks/sec when holding down.</p>
-                <button className="tooltip-close" onClick={(e) => {
-                  e.stopPropagation();
-                  setActiveTooltip(null);
-                }}>✕</button>
-              </div>
-            </div>
-          )}
-          
-          {state.level > 1 && (
-            <div 
-              className={`boost-icon-wrapper ${activeTooltip === 'level' ? 'tooltip-active' : ''}`}
-              onClick={() => handleTooltipToggle('level')}
-            >
-              <div className="boost-icon level-boost">
-                <span>⭐</span>
-                <span className="boost-text">+{(state.level - 1)}%</span>
-              </div>
-              <div className="boost-tooltip">
-                <h4>Level Bonus</h4>
-                <p>+{(state.level - 1)}% to all passive income</p>
-                <button className="tooltip-close" onClick={(e) => {
-                  e.stopPropagation();
-                  setActiveTooltip(null);
-                }}>✕</button>
-              </div>
-            </div>
-          )}
-          
-          {state.playerStatus.ascensionBonus > 0 && (
-            <div 
-              className={`boost-icon-wrapper ${activeTooltip === 'ascension' ? 'tooltip-active' : ''}`}
-              onClick={() => handleTooltipToggle('ascension')}
-            >
-              <div className="boost-icon ascension-boost">
-                <span>🔄</span>
-                <span className="boost-text">+{state.playerStatus.ascensionBonus}%</span>
-              </div>
-              <div className="boost-tooltip">
-                <h4>Ascension Bonus</h4>
-                <p>+{state.playerStatus.ascensionBonus}% to all passive income</p>
-                <button className="tooltip-close" onClick={(e) => {
-                  e.stopPropagation();
-                  setActiveTooltip(null);
-                }}>✕</button>
-              </div>
-            </div>
-          )}
-        </div>
-        
-        {/* The tap pad area */}
         <div 
-          className={`tap-pad ${!canAutoClick(state.playerStatus) ? 'no-auto-click' : ''}`}
+          className="tap-pad"
           onClick={handleClick}
           onMouseDown={handleMouseDown}
           onMouseUp={handleMouseUp}
@@ -534,15 +476,10 @@ const Clicker = () => {
           role="button"
           aria-label="Work button"
         >
-          {!canAutoClick(state.playerStatus) && (
-            <div className="auto-click-info">
-              <span>🚲 Buy transportation to enable auto-clicking</span>
-            </div>
-          )}
           <div className="tap-pad-content">
-            <div className="tap-icon">💼</div>
-            <div className="tap-text">Tap to work</div>
-            <div className="tap-value">+${clickValue.toFixed(2)}</div>
+            <span className="tap-pad-icon">👆</span>
+            <div className="tap-pad-text">Tap to Work</div>
+            <div className="tap-pad-value">+${clickValue.toFixed(2)}</div>
           </div>
         </div>
       </div>

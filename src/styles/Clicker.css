@@ -181,6 +181,44 @@
   z-index: 1;
 }
 
+.business-stats-toggle {
+  background-color: var(--bg-secondary);
+  border: none;
+  border-radius: var(--radius-md);
+  padding: 0.5rem;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  transition: all var(--transition-fast) ease;
+  box-shadow: var(--shadow-sm);
+}
+
+.business-stats-toggle:hover {
+  background-color: var(--bg-tertiary);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.business-stats-toggle .toggle-icon {
+  transition: transform var(--transition-fast) ease;
+}
+
+.business-stats-toggle.expanded .toggle-icon {
+  transform: rotate(180deg);
+}
+
+.business-stats-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height var(--transition-fast) ease;
+}
+
+.business-stats-content.expanded {
+  max-height: 200px;
+}
+
 .stat-box {
   background-color: var(--bg-secondary);
   border-radius: var(--radius-md);
@@ -239,15 +277,13 @@
 /* Bottom tap pad section */
 .tap-pad-section {
   display: flex;
-  margin-top: 30px;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 1rem;
 }
 
 .boost-icons-column {
-  width: 80px;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  margin-right: 20px;
+  display: none; /* Hide boost icons for now to focus on compact tap pad */
 }
 
 .boost-icon-wrapper {
@@ -341,53 +377,52 @@
 
 /* Tap Pad */
 .tap-pad {
-  flex: 1;
+  width: 85.6mm; /* Standard credit card width */
+  height: 53.98mm; /* Standard credit card height - maintains 1.586:1 ratio */
   background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
-  border-radius: 12px;
-  height: 13.75rem;
+  border-radius: 0.75rem;
   display: flex;
   align-items: center;
   justify-content: center;
+  box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.15);
   cursor: pointer;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
-  transition: all 0.2s;
+  transition: all 0.2s ease;
   position: relative;
   overflow: hidden;
+  /* Ensure the aspect ratio is maintained */
+  aspect-ratio: 1.586 / 1;
 }
 
 .tap-pad:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  transform: translateY(-0.125rem);
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.2);
 }
 
 .tap-pad:active {
-  transform: translateY(2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: translateY(0);
+  box-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.15);
 }
 
 .tap-pad-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
   text-align: center;
-}
-
-.tap-icon {
-  font-size: 3rem;
-  margin-bottom: 0.9375rem;
-}
-
-.tap-text {
   color: #2e7d32;
-  font-weight: 600;
-  font-size: 1.125rem;
-  margin-bottom: 0.625rem;
 }
 
-.tap-value {
-  color: #1b5e20;
+.tap-pad-icon {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.tap-pad-text {
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.tap-pad-value {
+  font-size: 1.125rem;
   font-weight: 700;
-  font-size: 1.5rem;
 }
 
 .tap-pad.no-auto-click {
@@ -413,33 +448,34 @@
 
 /* Job Level Progress */
 .job-level-progress {
-  margin-top: 0.25rem;
+  margin-top: 0.125rem;
+  padding: 0.25rem;
 }
 
 .level-display {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.125rem;
   font-weight: 500;
 }
 
 .current-job-level, .next-job-level {
   color: #1565c0;
-  font-size: 14px;
+  font-size: 12px;
 }
 
 .level-progress-bar {
-  height: 10px;
+  height: 6px;
   background-color: rgba(255, 255, 255, 0.9);
-  border-radius: 5px;
+  border-radius: 3px;
   overflow: hidden;
-  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 .level-progress-filled {
   height: 100%;
   background: linear-gradient(90deg, #26c6da, #00acc1);
-  border-radius: 5px;
+  border-radius: 3px;
   transition: width 0.5s ease-out;
 }
 
@@ -452,8 +488,8 @@
 .level-experience-text {
   display: flex;
   justify-content: space-between;
-  margin-top: 0.25rem;
-  font-size: 13px;
+  margin-top: 0.125rem;
+  font-size: 10px;
   color: #1565c0;
 }
 
