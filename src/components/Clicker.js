@@ -11,10 +11,11 @@ const Clicker = () => {
   const [clickValue, setClickValue] = useState(0.01);
   const [showAscension, setShowAscension] = useState(false);
   const [isHolding, setIsHolding] = useState(false);
+  const [isPressed, setIsPressed] = useState(false);
   const [activeTooltip, setActiveTooltip] = useState(null);
-  const [businessStatsExpanded, setBusinessStatsExpanded] = useState(false);
   const intervalRef = useRef(null);
   const boostsContainerRef = useRef(null);
+  const tapPadRef = useRef(null);
   const [skillGainIndicator, setSkillGainIndicator] = useState(null);
   const [showPromotionNotification, setShowPromotionNotification] = useState(false);
   
@@ -198,14 +199,15 @@ const Clicker = () => {
     
     // Always do a single click immediately on mouse down
     dispatch({ type: 'CLICK' });
+    setIsPressed(true);
     
-    // Show skill gain if there's a job
+    // Show skill/penny indicator and money gain near press location
     if (state.playerStatus.job && state.playerStatus.job.category) {
       showSkillGain(e.clientX, e.clientY - 20);
     } else {
-      // Show a penny gain if no job
       showPennyGain(e.clientX, e.clientY - 20);
     }
+    showMoneyGain(e.clientX, e.clientY - 20, clickValue);
     
     if (canAutoClick(state.playerStatus)) {
       setIsHolding(true);
@@ -215,6 +217,7 @@ const Clicker = () => {
   const handleMouseUp = (e) => {
     if (e) e.preventDefault();
     setIsHolding(false);
+    setIsPressed(false);
   };
   
   const handleTouchStart = (e) => {
@@ -225,6 +228,22 @@ const Clicker = () => {
     
     // Always do a single click immediately on touch
     dispatch({ type: 'CLICK' });
+    setIsPressed(true);
+    
+    // Show money gain at the exact touch position (fallback to center if missing)
+    const touch = (e.touches && e.touches[0]) || (e.changedTouches && e.changedTouches[0]);
+    const rect = tapPadRef.current ? tapPadRef.current.getBoundingClientRect() : null;
+    const fallbackX = rect ? rect.left + rect.width / 2 : window.innerWidth / 2;
+    const fallbackY = rect ? rect.top + rect.height / 2 : window.innerHeight / 2;
+    const x = touch ? touch.clientX : fallbackX;
+    const y = touch ? touch.clientY : fallbackY;
+    showMoneyGain(x, y - 20, clickValue);
+    // Also show skill/penny indicator at the touch position
+    if (state.playerStatus.job && state.playerStatus.job.category) {
+      showSkillGain(x, y - 20);
+    } else {
+      showPennyGain(x, y - 20);
+    }
     
     if (canAutoClick(state.playerStatus)) {
       setIsHolding(true);
@@ -234,6 +253,7 @@ const Clicker = () => {
   const handleTouchEnd = (e) => {
     if (e) e.preventDefault();
     setIsHolding(false);
+    setIsPressed(false);
   };
   
   const handleAscension = () => {
@@ -315,6 +335,25 @@ const Clicker = () => {
     }, 50);
     
     // Remove from DOM after animation
+    setTimeout(() => {
+      if (indicator.parentNode) {
+        indicator.parentNode.removeChild(indicator);
+      }
+    }, 1000);
+  };
+
+  // Show money gain near tap position or card center
+  const showMoneyGain = (x, y, amount) => {
+    const indicator = document.createElement('div');
+    indicator.innerText = `+$${amount.toFixed(2)}`;
+    indicator.className = 'penny-gain-indicator';
+    indicator.style.left = `${x}px`;
+    indicator.style.top = `${y}px`;
+    document.body.appendChild(indicator);
+    setTimeout(() => {
+      indicator.style.transform = 'translateY(-50px)';
+      indicator.style.opacity = '0';
+    }, 50);
     setTimeout(() => {
       if (indicator.parentNode) {
         indicator.parentNode.removeChild(indicator);
@@ -434,26 +473,17 @@ const Clicker = () => {
         </div>
         
         <div className="business-stats">
-          <button 
-            className={`business-stats-toggle ${businessStatsExpanded ? 'expanded' : ''}`}
-            onClick={() => setBusinessStatsExpanded(!businessStatsExpanded)}
-          >
-            <span>Business Overview</span>
-            <span className="toggle-icon">▼</span>
-          </button>
-          <div className={`business-stats-content ${businessStatsExpanded ? 'expanded' : ''}`}>
-            <div className="stat-box">
-              <div className="stat-label">Businesses</div>
-              <div className="stat-value">{countBusinesses()}</div>
-            </div>
-            <div className="stat-box">
-              <div className="stat-label">Passive Income</div>
-              <div className="stat-value">${(income * 60).toFixed(2)}/min</div>
-            </div>
-            <div className="stat-box">
-              <div className="stat-label">Ascension</div>
-              <div className="stat-value">{state.generation}</div>
-            </div>
+          <div className="stat-box">
+            <div className="stat-label">Businesses</div>
+            <div className="stat-value">{countBusinesses()}</div>
+          </div>
+          <div className="stat-box">
+            <div className="stat-label">Passive Income</div>
+            <div className="stat-value">${(income * 60).toFixed(2)}/min</div>
+          </div>
+          <div className="stat-box">
+            <div className="stat-label">Ascension</div>
+            <div className="stat-value">{state.generation}</div>
           </div>
         </div>
         
@@ -465,7 +495,8 @@ const Clicker = () => {
       {/* Bottom tap pad section */}
       <div className="tap-pad-section">
         <div 
-          className="tap-pad"
+          ref={tapPadRef}
+          className={`tap-pad ${isPressed ? 'pressed' : ''}`}
           onClick={handleClick}
           onMouseDown={handleMouseDown}
           onMouseUp={handleMouseUp}

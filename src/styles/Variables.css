@@ -70,9 +70,10 @@
   --bg-secondary: white;
   --bg-tertiary: var(--neutral-200);
   
-  --text-primary: var(--neutral-900);
-  --text-secondary: var(--neutral-700);
-  --text-tertiary: var(--neutral-600);
+  /* Higher-contrast text on light backgrounds */
+  --text-primary: #0f172a;   /* slate-900 */
+  --text-secondary: #1f2937; /* gray-800 */
+  --text-tertiary: #374151;  /* gray-700 */
   --text-light: white;
   
   /* Typography */

@@ -4,6 +4,7 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { auth, onAuthStateChanged } from './config/firebase';
+import { ThemeProvider } from './context/ThemeContext';
 
 // Firebase initialization wrapper component
 function FirebaseInitWrapper() {
@@ -11,6 +12,17 @@ function FirebaseInitWrapper() {
   const [initError, setInitError] = useState(null);
 
   useEffect(() => {
+    // Prevent double-tap to zoom across the app
+    let lastTouchEnd = 0;
+    const onTouchEnd = (e) => {
+      const now = Date.now();
+      if (now - lastTouchEnd <= 300) {
+        e.preventDefault();
+      }
+      lastTouchEnd = now;
+    };
+    document.addEventListener('touchend', onTouchEnd, { passive: false });
+
     const initFirebase = async () => {
       try {
         console.log("Initializing Firebase and waiting for auth state...");
@@ -35,6 +47,9 @@ function FirebaseInitWrapper() {
     };
 
     initFirebase();
+    return () => {
+      document.removeEventListener('touchend', onTouchEnd);
+    };
   }, []);
 
   if (initError) {
@@ -90,7 +105,9 @@ function FirebaseInitWrapper() {
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <FirebaseInitWrapper />
+    <ThemeProvider>
+      <FirebaseInitWrapper />
+    </ThemeProvider>
   </React.StrictMode>
 );
 

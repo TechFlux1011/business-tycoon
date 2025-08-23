@@ -3,6 +3,12 @@
   margin: 0 auto;
   padding: var(--space-md);
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  display: flex;            /* Arrange top info and pad vertically */
+  flex-direction: column;   /* Stack elements */
+  min-height: 100%;         /* Fit within app-content without forcing page scroll */
+  height: 100%;
+  overflow: hidden;         /* Prevent work screen from scrolling */
+  margin-bottom: -4.5rem;   /* cancel app-content bottom padding to prevent extra scroll space */
 }
 
 /* Top section with player info */
@@ -14,6 +20,14 @@
   margin-bottom: 12px; /* tighter spacing */
   position: relative;
   overflow: hidden;
+}
+
+/* Dark mode styling for player info section */
+.dark .player-info-section {
+  background: linear-gradient(135deg, #0f172a 0%, #111827 100%);
+}
+.dark .player-info-section::before {
+  background: radial-gradient(circle, rgba(51, 65, 85, 0.4) 0%, rgba(15, 23, 42, 0) 70%);
 }
 
 .player-info-section::before {
@@ -34,7 +48,7 @@
 }
 
 .player-name-level h2 {
-  color: var(--primary-900);
+  color: var(--text-primary);
   margin: 0 0 8px 0;
   font-size: var(--text-xl); /* smaller heading */
   font-weight: var(--weight-semibold);
@@ -100,6 +114,21 @@
   z-index: 1;
 }
 
+/* Ensure strong readable text inside job panel */
+.job-info-panel .job-title,
+.job-info-panel .job-pay {
+  color: #0f172a; /* slate-900 for contrast on light panel */
+}
+
+/* Dark theme: make job panel dark with light text */
+.dark .job-info-panel {
+  background-color: rgba(30, 41, 59, 0.9);
+}
+.dark .job-info-panel .job-title,
+.dark .job-info-panel .job-pay {
+  color: var(--text-primary);
+}
+
 .job-info-panel .job-header {
   display: flex;
   align-items: center;
@@ -130,7 +159,7 @@
   flex-wrap: wrap;
   font-size: var(--text-md); /* smaller */
   font-weight: var(--weight-semibold);
-  color: var(--primary-900);
+  color: var(--text-primary);
   margin-bottom: 6px;
 }
 
@@ -158,7 +187,7 @@
 }
 
 .job-pay {
-  color: var(--success-800);
+  color: var(--text-primary);
   font-weight: var(--weight-semibold);
   font-size: 14px; /* smaller */
   margin-bottom: 8px;
@@ -244,14 +273,14 @@
 }
 
 .stat-label {
-  color: #616161;
+  color: var(--text-tertiary);
   font-size: 11px; /* smaller */
   font-weight: 500;
   margin-bottom: 2px;
 }
 
 .stat-value {
-  color: #1976d2;
+  color: var(--primary-800);
   font-size: 16px; /* smaller */
   font-weight: 600;
 }
@@ -269,7 +298,7 @@
 }
 
 .money-value {
-  color: #2e7d32;
+  color: var(--success-800);
   font-size: 22px; /* smaller */
   font-weight: 700;
 }
@@ -278,8 +307,16 @@
 .tap-pad-section {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  margin-top: 1rem;
+  align-items: stretch;   /* Make tap pad match panel width */
+  margin-top: auto;       /* Push to bottom initially */
+  width: 100%;
+  padding: 0 var(--space-md) 1rem;   /* breathing room above bottom nav and side gutters */
+  position: fixed;        /* Pin above navbar */
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: calc(4.5rem + 1rem + env(safe-area-inset-bottom)); /* Extra gap above nav */
+  max-width: var(--container-width);
+  z-index: 19;            /* Below nav (z-index: 20), above content */
 }
 
 .boost-icons-column {
@@ -377,8 +414,8 @@
 
 /* Tap Pad */
 .tap-pad {
-  width: 85.6mm; /* Standard credit card width */
-  height: 53.98mm; /* Standard credit card height - maintains 1.586:1 ratio */
+  width: 100%;            /* Match player info panel width */
+  height: auto;           /* Let aspect-ratio determine height */
   background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
   border-radius: 0.75rem;
   display: flex;
@@ -393,19 +430,29 @@
   aspect-ratio: 1.586 / 1;
 }
 
+/* Dark mode tap pad styling */
+.dark .tap-pad {
+  background: linear-gradient(135deg, #0b3b2e 0%, #0a2f24 100%);
+}
+
 .tap-pad:hover {
   transform: translateY(-0.125rem);
   box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.2);
 }
 
-.tap-pad:active {
-  transform: translateY(0);
+.tap-pad:active,
+.tap-pad.pressed {
+  transform: translateY(0) scale(0.98);
   box-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.15);
 }
 
 .tap-pad-content {
   text-align: center;
   color: #2e7d32;
+}
+
+.dark .tap-pad-content {
+  color: #bbf7d0; /* green-200 for contrast on dark pad */
 }
 
 .tap-pad-icon {
@@ -450,6 +497,7 @@
 .job-level-progress {
   margin-top: 0.125rem;
   padding: 0.25rem;
+  background-color: #111827;
 }
 
 .level-display {
@@ -466,7 +514,7 @@
 
 .level-progress-bar {
   height: 6px;
-  background-color: rgba(255, 255, 255, 0.9);
+  background-color: #111827;
   border-radius: 3px;
   overflow: hidden;
   box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
@@ -744,7 +792,8 @@
   }
 
   .job-title {
-    font-size: 14px;
+    font-size: 5rem;
+    color: black;
   }
 
   .job-level-indicator {
@@ -767,8 +816,9 @@
   
   .tap-pad-section {
     flex-direction: column;
-    margin-top: 15px;
-    height: 48vh; /* ensure pad fits viewport */
+    margin-top: auto; /* keep at bottom on mobile */
+    height: auto; /* let content define height */
+    align-items: stretch;
   }
   
   .boost-icons-column {
@@ -801,8 +851,8 @@
   }
   
   .tap-pad {
-    flex: 1;
-    height: calc(48vh - 55px);
+    width: 100%;
+    height: auto; /* keep horizontal credit-card ratio */
   }
 
   .tap-icon {

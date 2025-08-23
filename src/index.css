@@ -12,6 +12,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background-color: var(--bg-primary);
   color: var(--text-primary);
+  touch-action: manipulation; /* reduce gesture-induced zooms */
 }
 
 code {

@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useGame } from '../../context/GameContext';
+import { useTheme } from '../../context/ThemeContext';
 
 export default function Profile({ onClose }) {
   const { currentUser, logout } = useAuth();
   const { saveGame, resetGame } = useGame();
+  const { theme, toggleTheme } = useTheme();
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
@@ -73,6 +75,13 @@ export default function Profile({ onClose }) {
       </div>
       
       <div className="profile-actions flex flex-col gap-3">
+        <button
+          onClick={toggleTheme}
+          className="bg-gray-800 text-white py-2 px-4 rounded hover:bg-gray-900"
+        >
+          {theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+        </button>
+
         <button
           onClick={handleSaveGame}
           disabled={loading}
